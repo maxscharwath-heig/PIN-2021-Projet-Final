@@ -18,6 +18,8 @@ public:
    std::vector<Particule*> particules;
    double simulationTime;
 
+   void update(WorldWidget* widget, double deltaTime);
+
    void addParticule(Particule* particule);
 
    void deleteParticule(Particule* particule);

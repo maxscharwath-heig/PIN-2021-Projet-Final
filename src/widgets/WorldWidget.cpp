@@ -27,15 +27,7 @@ void WorldWidget::tick(void* userdata) {
 
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
-      o->world->simulationTime += deltaTime;
-
-      for (const auto& item: o->world->robots) {
-         item->update(o, deltaTime);
-      }
-
-      // TODO: Add time of spreading
-      // Cell spreading
-      o->world->updateParticules();
+      o->world->update(o,deltaTime);
    }
    o->redraw();
    Fl::repeat_timeout(refreshCycle, tick, userdata);

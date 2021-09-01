@@ -6,7 +6,6 @@
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 
-
 void Object::setWorld(World* world) {
    this->world = world;
 }

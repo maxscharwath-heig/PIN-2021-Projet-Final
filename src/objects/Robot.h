@@ -21,8 +21,17 @@ public:
 
    void update(WorldWidget* widget, double delaTime);
 
-   RobotData predict(WorldWidget* widget, double deltaTime);
+   RobotData* predict(WorldWidget* widget, double deltaTime);
+
+   static bool collision(RobotData* a, RobotData* b);
+
+   bool collided = false;
 };
 
+struct RobotData {
+   Robot* robot = nullptr;
+   Position position;
+   double orientation = 0;
+};
 
 #endif //PIN_2021_SERIE_1_ROBOT_H

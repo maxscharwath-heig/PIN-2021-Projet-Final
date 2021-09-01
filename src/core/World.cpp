@@ -21,12 +21,13 @@ void World::updateParticules() {
    std::vector<Particule*> particulesToDelete;
 
    for (const auto& item: particules) {
-      if (item->getDecomposeTime() <= simulationTime || item->getDestroyTime() <= simulationTime) {
+      if (item->getDecomposeTime() <= simulationTime ||
+          item->getDestroyTime() <= simulationTime) {
          particulesToDelete.push_back(item);
       }
    }
 
-   for(const auto& item: particulesToDelete){
+   for (const auto& item: particulesToDelete) {
       explode(item);
    }
 }
@@ -57,4 +58,25 @@ void World::deleteRobot(Robot* robot) {
    if (el == robots.end()) return;
    robots.erase(el);
    delete robot;
+}
+
+void World::update(WorldWidget* widget, double deltaTime) {
+   simulationTime += deltaTime;
+   std::vector<RobotData*> robotsPredicted;
+   for (const auto& item: robots) {
+      robotsPredicted.push_back(item->predict(widget, deltaTime*2));
+   }
+   for (const auto& a: robotsPredicted) {
+      a->robot->collided = false;
+      for (const auto& b: robotsPredicted) {
+         if (a == b)continue;
+         if (Robot::collision(a, b)) {
+            a->robot->collided = true;
+         }
+      }
+   }
+   for (const auto& item: robots) {
+      item->update(widget, deltaTime);
+   }
+   updateParticules();
 }
