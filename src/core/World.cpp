@@ -64,7 +64,7 @@ void World::update(WorldWidget* widget, double deltaTime) {
    simulationTime += deltaTime;
    std::vector<RobotData*> robotsPredicted;
    for (const auto& item: robots) {
-      robotsPredicted.push_back(item->predict(widget, deltaTime*2));
+      robotsPredicted.push_back(item->predict(widget, deltaTime*1.5));
    }
    for (const auto& a: robotsPredicted) {
       a->robot->collided = false;
@@ -72,6 +72,8 @@ void World::update(WorldWidget* widget, double deltaTime) {
          if (a == b)continue;
          if (Robot::collision(a, b)) {
             a->robot->collided = true;
+            a->robot->stop();
+            break;
          }
       }
    }

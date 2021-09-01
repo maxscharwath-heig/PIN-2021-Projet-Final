@@ -26,6 +26,8 @@ public:
    static bool collision(RobotData* a, RobotData* b);
 
    bool collided = false;
+
+   void stop();
 };
 
 struct RobotData {

@@ -94,3 +94,8 @@ bool Robot::collision(RobotData* a, RobotData* b) {
    double distance = sqrt(dx * dx + dy * dy);
    return distance <= a->robot->radius + b->robot->radius;
 }
+
+void Robot::stop() {
+   leftSpeed = 0;
+   rightSpeed = 0;
+}
