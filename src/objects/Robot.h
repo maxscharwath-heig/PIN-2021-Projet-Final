@@ -5,6 +5,8 @@
 #include "../core/Canvas.h"
 #include "Object.h"
 
+struct RobotData;
+
 class Robot : public Object {
 private:
    const int radius;
@@ -18,6 +20,8 @@ public:
    void draw(WorldWidget* widget) const;
 
    void update(WorldWidget* widget, double delaTime);
+
+   RobotData predict(WorldWidget* widget, double deltaTime);
 };
 
 

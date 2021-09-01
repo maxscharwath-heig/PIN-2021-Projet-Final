@@ -5,6 +5,12 @@
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 
+struct RobotData {
+   Robot* robot;
+   Position position;
+   double orientation;
+};
+
 Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
       Object(position),
@@ -34,12 +40,20 @@ void Robot::draw(WorldWidget* widget) const {
              headSize * ratio);
 }
 
-void Robot::update(WorldWidget* widget, double deltaTime) {
+RobotData Robot::predict(WorldWidget* widget, double deltaTime) {
+   RobotData prediction = {
+         .robot =  this,
+         .position = {
+               position.x,
+               position.y,
+         },
+         .orientation = orientation
+   };
    double
          t = deltaTime,
          dX = 0,
          dY = 0,
-         a = orientation * M_PI / 180.0,
+         a = prediction.orientation * M_PI / 180.0,
          vg = leftSpeed,
          vd = rightSpeed;
 
@@ -59,15 +73,22 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
       dX = vg * cos(a) * t;
       dY = vg * sin(a) * t;
    } else if (vg == -vd) {//rotate
-      orientation += vg * t;
+      prediction.orientation += vg * t;
    } else {//circle
       double R = radius * (vg + vd) / (vg - vd);
       double vT = (vg + vd) / 2.0;
       double w = vT / R * t;
       dX = R * (cos(a) * sin(w) - sin(a) * (1 - cos(w)));
       dY = R * (sin(a) * sin(w) + cos(a) * (1 - cos(w)));
-      orientation += w * 180.0 / M_PI;
+      prediction.orientation += w * 180.0 / M_PI;
    }
-   position.x += dX;
-   position.y += dY;
+   prediction.position.x += dX;
+   prediction.position.y += dY;
+   return prediction;
+}
+
+void Robot::update(WorldWidget* widget, double deltaTime) {
+   auto prediction = predict(widget, deltaTime);
+   position = prediction.position;
+   orientation = prediction.orientation;
 }
