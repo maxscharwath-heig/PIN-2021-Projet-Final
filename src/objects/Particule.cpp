@@ -17,9 +17,7 @@ Particule::Particule(
       radius(radius),
       color(color),
       decomposeIndex(decomposeIndex),
-      parentDecomposeIndex(decomposeIndex),
       destroyIndex(destroyIndex),
-      parentDestroyIndex(destroyIndex),
       decomposeLevel(decomposeLevel),
       tmaxe(tmaxe),
       id(id)
@@ -48,22 +46,22 @@ std::vector<Particule*> Particule::createChilds(double currentTime) const {
    children.emplace_back(
          new Particule({position.x - newRadius, position.y - newRadius}, newRadius,
                        color,
-                       parentDecomposeIndex, parentDestroyIndex,
+                       decomposeIndex, destroyIndex,
                        currentTime, tmaxe, id + 1, decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
                        color,
-                       parentDecomposeIndex, parentDestroyIndex,
+                       decomposeIndex, destroyIndex,
                        currentTime, tmaxe,id + 2,decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x - newRadius, position.y + newRadius}, newRadius,
                        color,
-                       parentDecomposeIndex, parentDestroyIndex,
+                       decomposeIndex, destroyIndex,
                        currentTime, tmaxe, id + 3,decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
                        color,
-                       parentDecomposeIndex, parentDestroyIndex,
+                       decomposeIndex, destroyIndex,
                        currentTime, tmaxe,id + 4,decomposeLevel + 1));
    return children;
 }
@@ -78,11 +76,6 @@ unsigned Particule::getDestroyIndex() const {
 
 unsigned Particule::getDecomposeLevel() const {
    return decomposeLevel;
-}
-
-void Particule::decreaseIndexes(size_t diff) {
-   decomposeIndex -= diff;
-   destroyIndex -= diff;
 }
 
 void Particule::explode() {
