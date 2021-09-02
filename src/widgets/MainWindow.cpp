@@ -40,7 +40,7 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
    window->fileLoadGroup = new Fl_Group(window->w() - 725, TOOLBAR_Y, 400, DEFAULT_BTN_H);
-   window->inputFile = new Fl_Input(25, TOOLBAR_Y, 225, DEFAULT_BTN_H, "Fichier");
+   window->inputFile = new Fl_Input(TOOLBAR_Y, TOOLBAR_Y, INPUT_W, DEFAULT_BTN_H, "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
    window->inputFile->value("demo-particule.dat"); // Temporary for testing
@@ -56,21 +56,20 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
 void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300, 50);
+   window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300, DEFAULT_BTN_H);
    {
-      window->fastLowerSpeedButton = new Fl_Button(window->w() - 350, TOOLBAR_Y, 15, DEFAULT_BTN_H,
+      window->fastLowerSpeedButton = new Fl_Button(window->w() - 350, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H,
                                                    "@<<");
-      window->lowerSpeedButton = new Fl_Button(window->w() - 335, TOOLBAR_Y, 15, DEFAULT_BTN_H, "@<");
+      window->lowerSpeedButton = new Fl_Button(window->w() - 335, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H, "@<");
       window->fastLowerSpeedButton->callback(fastLowerSpeed, window);
       window->lowerSpeedButton->callback(lowerSpeed, window);
 
-      window->speedInput = new Fl_Input(window->w() - 320, TOOLBAR_Y, 30, DEFAULT_BTN_H, "Vitesse");
+      window->speedInput = new Fl_Input(window->w() - 320, TOOLBAR_Y, SMALL_INPUT_W, DEFAULT_BTN_H, "Vitesse");
       window->speedInput->align(FL_ALIGN_TOP_LEFT);
       updateSpeed(window, window);
 
-      window->greaterSpeedButton = new Fl_Button(window->w() - 290, TOOLBAR_Y, 15, DEFAULT_BTN_H, "@>");
-      window->fastGreaterSpeedButton = new Fl_Button(window->w() - 275, TOOLBAR_Y, 15, DEFAULT_BTN_H,
-                                                     "@>>");
+      window->greaterSpeedButton = new Fl_Button(window->w() - 290, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H, "@>");
+      window->fastGreaterSpeedButton = new Fl_Button(window->w() - 275, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H,"@>>");
       window->fastGreaterSpeedButton->callback(fastGreaterSpeed, window);
       window->greaterSpeedButton->callback(greaterSpeed, window);
 
@@ -203,10 +202,8 @@ int MainWindow::getFittedH()
 {
    if (Fl::w() < worldWidget->w()) {
       return Fl::h();
-   } else if (MIN_HEIGHT >= worldWidget->h()) {
-      return MIN_HEIGHT;
    }
-   return worldWidget->y() + worldWidget->h() + MARGIN * w();
+   return MIN_HEIGHT >= worldWidget->h() ? MIN_HEIGHT : worldWidget->y() + worldWidget->h() + MARGIN * w();
 }
 
 int MainWindow::getFittedW()
@@ -214,10 +211,7 @@ int MainWindow::getFittedW()
    if (Fl::w() < worldWidget->w()) {
       return Fl::w();
    }
-   else if (MIN_WIDTH >= worldWidget->w()) {
-      return MIN_WIDTH;
-   }
-   return worldWidget->w() + MARGIN * w();
+   return MIN_WIDTH >= worldWidget->w() ? MIN_WIDTH : worldWidget->w() + MARGIN * w();
 }
 
 
