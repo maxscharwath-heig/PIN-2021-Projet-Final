@@ -31,7 +31,9 @@ public:
 
    World* world;
 
-   void static tick(void* userdata);
+   void static perform(void* userdata);
+
+   void static refreshView(void* userdata);
 
    static double refreshCycle;
    static double timeMultiplier;

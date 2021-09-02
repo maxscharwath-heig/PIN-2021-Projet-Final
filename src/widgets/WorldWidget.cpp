@@ -15,22 +15,24 @@ WorldWidget::WorldWidget(int x, int y, int w, int h) : Fl_Widget(x, y, w, h, "")
    canvas = nullptr;
    scale = nullptr;
    this->lastTickTime = std::chrono::high_resolution_clock::now();
-   Fl::add_timeout(refreshCycle, tick, (void*) this);
+
+   // TODO: Change cycles values
+   Fl::add_timeout(refreshCycle, perform, (void*) this);
+   Fl::add_timeout(refreshCycle, refreshView, (void*) this);
 }
 
-void WorldWidget::tick(void* userdata) {
+void WorldWidget::perform(void* userdata) {
    auto* o = (WorldWidget*) userdata;
    auto now = std::chrono::high_resolution_clock::now();
    std::chrono::duration<double> elapsed = now - o->lastTickTime;
    o->lastTickTime = now;
    double timeCorrector = elapsed.count() / refreshCycle;
-   o->updateTimeLabel();
+
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
       o->world->update(o,deltaTime);
    }
-   o->redraw();
-   Fl::repeat_timeout(refreshCycle, tick, userdata);
+   Fl::repeat_timeout(refreshCycle, perform, userdata);
 }
 
 void WorldWidget::draw() {
@@ -49,8 +51,16 @@ void WorldWidget::draw() {
    fl_pop_clip();
 }
 
+void WorldWidget::refreshView(void *userdata)
+{
+   auto* o = (WorldWidget*) userdata;
+   o->updateTimeLabel();
+   o->redraw();
+
+   Fl::repeat_timeout(refreshCycle, refreshView, userdata);
+}
+
 void WorldWidget::parseFile(const std::string& fileName) {
-   // TODO: Refactor
 
    std::ifstream file(fileName);
    if (!file.is_open()) {
