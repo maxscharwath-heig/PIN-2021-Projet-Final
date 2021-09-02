@@ -10,29 +10,26 @@ public:
    Canvas(int xMin, int yMin, int xMax, int yMax, unsigned tMaxV, int pMin, int pMax,
           unsigned tMaxE, int color = 1);
 
-   void draw(Fl_Widget* parent, Canvas* canvas, Scale* scale) const;
+   void draw(Fl_Widget* parent, Scale* scale) const;
 
    int x() const;
-
-   int w() const;
-
    int y() const;
 
-   int h() const;
+   int w(double scale) const;
+   int h(double scale) const;
 
    unsigned TMAXE() const;
-
-   unsigned tMaxV;
-   int pMin;
-   int pMax;
-   unsigned tMaxE;
 
 private:
    int xMin;
    int xMax;
    int yMin;
    int yMax;
+   unsigned tMaxV;
+   int pMin;
+   int pMax;
    int color;
+   unsigned tMaxE;
 
 };
 

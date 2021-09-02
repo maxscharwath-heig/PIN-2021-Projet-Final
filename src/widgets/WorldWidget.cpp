@@ -37,7 +37,7 @@ void WorldWidget::draw() {
    if (canvas == nullptr || scale == nullptr) return;
 
    fl_push_clip(x(), y(), w(), h());
-   canvas->draw(this, canvas, scale);
+   canvas->draw(this, scale);
 
    for (const auto& item: world->robots) {
       item->draw(this);
@@ -126,7 +126,7 @@ void WorldWidget::parseFile(const std::string& fileName) {
       ++nbLine;
    }
    file.close();
-   size(int(canvas->w() * scale->distance()),int(canvas->h() * scale->distance()));
+   size(canvas->w(scale->distance()), canvas->h(scale->distance()));
 }
 
 void WorldWidget::setPaused(bool paused) {

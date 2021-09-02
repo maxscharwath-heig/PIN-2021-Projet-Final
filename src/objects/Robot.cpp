@@ -14,24 +14,23 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
       rightSpeed(rightSpeed) {}
 
 void Robot::draw(WorldWidget* widget) const {
-   double ratio = widget->scale->getScaleRatio();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
    fl_color(collided ? FL_GREEN : FL_BLACK);
    //body
-   fl_circle(widget->x() + (position.x + offsetX) * ratio,
-             widget->y() + (position.y + offsetY) * ratio,
-             radius * ratio);
+   fl_circle(widget->x() + (position.x + offsetX),
+             widget->y() + (position.y + offsetY),
+             radius);
    //head
    int headSize = radius / 4;
    double a = orientation * M_PI / 180.0;
    double x1 = position.x + ((radius - headSize * 2) * cos(a));
    double y1 = position.y + ((radius - headSize * 2) * sin(a));
 
-   fl_circle(widget->x() + (x1 + offsetX) * ratio,
-             widget->y() + (y1 + offsetY) * ratio,
-             headSize * ratio);
+   fl_circle(widget->x() + (x1 + offsetX),
+             widget->y() + (y1 + offsetY),
+             headSize);
 }
 
 RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {

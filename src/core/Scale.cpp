@@ -7,10 +7,10 @@ Scale::Scale(unsigned int xWorld, unsigned int nPixels, unsigned tWorld,
 
 double Scale::time() const
 {
-   return double(xWorld) / double(nPixels);
+   return double(tWorld) / double(nRefresh);
 }
 
 double Scale::distance() const
 {
-   return double(tWorld) / double(nRefresh);
+   return double(xWorld) / double(nPixels);
 }

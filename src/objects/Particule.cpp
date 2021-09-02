@@ -28,12 +28,11 @@ Particule::Particule(
 
 void Particule::draw(WorldWidget* widget) const {
    fl_color(color);
-   double ratio = widget->scale->getScaleRatio();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
-   int posX = (int) (widget->x() + (position.x - radius + offsetX) * ratio);
-   int posY = (int) (widget->y() + (position.y - radius + offsetY) * ratio);
-   int size = (int) (radius * 2.0 * ratio);
+   int posX = (int) (widget->x() + (position.x - radius + offsetX));
+   int posY = (int) (widget->y() + (position.y - radius + offsetY));
+   int size = (int) (radius * 2.0);
    fl_pie(posX, posY, size, size, 0, 360);
 }
 
