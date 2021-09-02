@@ -11,7 +11,15 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
       radius(radius),
       orientation(orientation),
       leftSpeed(leftSpeed),
-      rightSpeed(rightSpeed) {}
+      rightSpeed(rightSpeed) {
+   //todo list of movement for testing;
+   addAction(0, -100, 100);
+   addAction(1, 10, 100);
+   addAction(2, 20, 20);
+   addAction(4.2, -20, -20);
+   addAction(5.9, 20, 20);
+   addAction(7, 0, 200);
+}
 
 void Robot::draw(WorldWidget* widget) const {
    double scale = widget->scale->distance();
@@ -22,7 +30,7 @@ void Robot::draw(WorldWidget* widget) const {
    //body
    fl_circle(widget->x() + (position.x + offsetX) * scale,
              widget->y() + (position.y + offsetY) * scale,
-             radius  * scale);
+             radius * scale);
    //head
    int headSize = radius / 4;
    double a = orientation * M_PI / 180.0;
@@ -79,6 +87,15 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 }
 
 void Robot::update(WorldWidget* widget, double deltaTime) {
+   if (!actions.empty()) {
+      auto last = actions.front();
+      if (world->simulationTime >= last.time) {
+         std::cout << "new move" << std::endl;
+         leftSpeed = last.vg;
+         rightSpeed = last.vd;
+         actions.pop();
+      }
+   }
    auto prediction = predict(widget, deltaTime);
    position = prediction->position;
    orientation = prediction->orientation;
@@ -95,4 +112,12 @@ bool Robot::collision(RobotData* a, RobotData* b) {
 void Robot::stop() {
    leftSpeed = 0;
    rightSpeed = 0;
+}
+
+bool Robot::addAction(double t, int vg, int vd) {
+   if (!actions.empty() && t <= actions.back().time) return false;
+   if (t < 0 || world && t < world->simulationTime)
+      return false;//if we need to add command at runtime;
+   actions.push({t, vg, vd});
+   return true;
 }

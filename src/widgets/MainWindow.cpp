@@ -43,7 +43,7 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    window->inputFile = new Fl_Input(TOOLBAR_Y, TOOLBAR_Y, INPUT_W, DEFAULT_BTN_H, "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
-   window->inputFile->value("demo-particule.dat"); // Temporary for testing
+   window->inputFile->value("demo_fltk.dat"); // Temporary for testing
 
    window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
