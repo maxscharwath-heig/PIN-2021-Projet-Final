@@ -12,11 +12,11 @@ Canvas::Canvas(int xMin, int yMin, int xMax, int yMax, unsigned tMaxV, int pMin,
       pMax(pMax), color(color), tMaxE(tMaxE) {}
 
 int Canvas::x() const {
-   return xMin;
+   return -xMin;
 }
 
 int Canvas::y() const {
-   return yMin;
+   return -yMin;
 }
 
 int Canvas::w(double scale) const {
