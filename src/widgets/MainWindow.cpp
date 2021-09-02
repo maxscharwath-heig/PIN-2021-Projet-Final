@@ -43,7 +43,7 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    window->inputFile = new Fl_Input(25, TOOLBAR_Y, 225, DEFAULT_BTN_H, "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
-   window->inputFile->value("demo_fltk.dat"); // Temporary for testing
+   window->inputFile->value("demo-particule.dat"); // Temporary for testing
 
    window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
@@ -104,7 +104,6 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
    window->worldWidget->world->clear();
-
    std::string inputPath = window->inputFile->value();
 
    try {
@@ -122,7 +121,7 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
    window->scrollbars->show();
    window->label(inputPath.substr(inputPath.find_last_of("/\\") + 1).data());
 
-   window->resize(window->x(), window->y(), window->getWidthAdaptingOnWorld(), window->getHeightAdaptingOnWorld());
+   window->resize(window->x(), window->y(), window->getFittedW(), window->getFittedH());
 
    toggle_sim_buttons(window, data, true);
 }
@@ -141,7 +140,8 @@ void MainWindow::toggle_start_pause(Fl_Widget* widget, void* data) {
    if (window->worldWidget->getPaused()) {
       window->playPauseButton->label("go");
       window->fileLoadGroup->activate();
-   } else {
+   }
+   else {
       window->playPauseButton->label("pause");
       window->fileLoadGroup->deactivate();
    }
@@ -199,7 +199,7 @@ void MainWindow::updateSpeed(Fl_Widget* widget, void* data) {
    window->speedInput->value(os.str().data());
 }
 
-int MainWindow::getHeightAdaptingOnWorld()
+int MainWindow::getFittedH()
 {
    if (Fl::w() < worldWidget->w()) {
       return Fl::h();
@@ -209,7 +209,7 @@ int MainWindow::getHeightAdaptingOnWorld()
    return worldWidget->y() + worldWidget->h() + MARGIN * w();
 }
 
-int MainWindow::getWidthAdaptingOnWorld()
+int MainWindow::getFittedW()
 {
    if (Fl::w() < worldWidget->w()) {
       return Fl::w();

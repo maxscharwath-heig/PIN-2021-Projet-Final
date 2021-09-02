@@ -64,9 +64,9 @@ private:
 
    static void updateSpeed(Fl_Widget* widget, void* data);
 
-   int getWidthAdaptingOnWorld();
+   int getFittedW();
 
-   int getHeightAdaptingOnWorld();
+   int getFittedH();
 
    double speedInputValue;
 };

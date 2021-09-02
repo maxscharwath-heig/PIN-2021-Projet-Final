@@ -1,10 +1,8 @@
 #include <FL/fl_draw.H>
-#include <iostream>
 #include "Canvas.h"
 
 void Canvas::draw(Fl_Widget* parent, Scale* scale) const {
    fl_color(color);
-   std::cout << xMin  << " " << xMax << " " << scale->distance();
    fl_rectf(parent->x(), parent->y(), w(scale->distance()), h(scale->distance()));
 }
 

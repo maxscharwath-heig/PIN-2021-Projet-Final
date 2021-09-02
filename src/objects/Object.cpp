@@ -1,7 +1,3 @@
-//
-// Created by Maxime on 31.08.2021.
-//
-
 #include "Object.h"
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
@@ -16,12 +12,4 @@ Position Object::getPosition() {
 
 Object::Object(Position position) {
    this->position = position;
-}
-
-void Object::draw(WorldWidget* widget) const {
-
-}
-
-void Object::update(WorldWidget* widget, double deltaTime) {
-
 }

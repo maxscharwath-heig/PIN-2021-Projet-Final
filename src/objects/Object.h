@@ -1,7 +1,3 @@
-//
-// Created by Maxime on 31.08.2021.
-//
-
 #ifndef PIN_2021_SERIE_1_OBJECT_H
 #define PIN_2021_SERIE_1_OBJECT_H
 
@@ -20,9 +16,9 @@ protected:
 public:
    explicit Object(Position position);
 
-   virtual void draw(WorldWidget* widget) const;
+   virtual void draw(WorldWidget* widget) const = 0;
 
-   virtual void update(WorldWidget* widget, double deltaTime);
+   virtual void update(WorldWidget* widget, double deltaTime) = 0;
 
    Position getPosition();
 

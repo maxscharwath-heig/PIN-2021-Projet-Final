@@ -25,15 +25,13 @@ public:
    Particule(Position position, int radius, int color, unsigned decomposeIndex,
              unsigned destroyIndex, double currentTime, unsigned tmaxe, unsigned id, unsigned decomposeLevel = 1);
 
-   unsigned getDecomposeIndex() const;
-
-   unsigned getDestroyIndex() const;
-
    unsigned getDecomposeLevel() const;
 
    std::vector<Particule*> createChilds(double currentTime) const;
 
-   void draw(WorldWidget* widget) const;
+   void update(WorldWidget* widget, double deltaTime) override;
+
+   void draw(WorldWidget* widget) const override;
 
    double getDecomposeTime() const;
 

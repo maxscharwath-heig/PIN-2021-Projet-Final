@@ -17,9 +17,9 @@ public:
    Robot(Position position, int radius, int orientation, int leftSpeed,
          int rightSpeed);
 
-   void draw(WorldWidget* widget) const;
+   void draw(WorldWidget* widget) const override;
 
-   void update(WorldWidget* widget, double delaTime);
+   void update(WorldWidget* widget, double delaTime) override;
 
    RobotData* predict(WorldWidget* widget, double deltaTime);
 

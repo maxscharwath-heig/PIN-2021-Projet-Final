@@ -27,13 +27,14 @@ Particule::Particule(
 
 void Particule::draw(WorldWidget* widget) const {
    fl_color(color);
+   double scale = widget->scale->distance();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
    int posX = (int) (widget->x() +
-                     (position.x - radius + offsetX) * widget->scale->distance());
+                     (position.x - radius + offsetX) * scale);
    int posY = (int) (widget->y() +
-                     (position.y - radius + offsetY) * widget->scale->distance());
-   int size = (int) (radius * 2.0 * widget->scale->distance());
+                     (position.y - radius + offsetY) * scale);
+   int size = (int) (radius * 2.0 * scale);
    fl_pie(posX, posY, size, size, 0, 360);
 }
 
@@ -66,14 +67,6 @@ std::vector<Particule*> Particule::createChilds(double currentTime) const {
    return children;
 }
 
-unsigned Particule::getDecomposeIndex() const {
-   return decomposeIndex;
-}
-
-unsigned Particule::getDestroyIndex() const {
-   return destroyIndex;
-}
-
 unsigned Particule::getDecomposeLevel() const {
    return decomposeLevel;
 }
@@ -100,4 +93,10 @@ double Particule::getDecomposeTime() const {
 
 double Particule::getDestroyTime() const {
    return timeOfDestroy;
+}
+
+void Particule::update(WorldWidget *widget, double deltaTime)
+{
+   // TODO: Call explode from here ?
+
 }

@@ -33,5 +33,4 @@ private:
 
 };
 
-
 #endif //PIN_2021_SERIE_1_CANVAS_H
