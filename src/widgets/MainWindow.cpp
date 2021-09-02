@@ -21,6 +21,7 @@ MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
    quitButton->callback(quit_cb, this);
 
    scrollbars = new Fl_Center_Scroll(25, 100, w() - 50, h() - 125);
+   scrollbars->align(FL_ALIGN_TOP_LEFT);
    scrollbars->begin();
    {
       worldWidget = new WorldWidget(scrollbars->x(), scrollbars->y(), 0, 0);

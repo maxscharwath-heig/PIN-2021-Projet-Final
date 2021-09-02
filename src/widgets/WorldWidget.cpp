@@ -24,7 +24,7 @@ void WorldWidget::tick(void* userdata) {
    std::chrono::duration<double> elapsed = now - o->lastTickTime;
    o->lastTickTime = now;
    double timeCorrector = elapsed.count() / refreshCycle;
-
+   o->updateTimeLabel();
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
       o->world->update(o,deltaTime);
@@ -47,11 +47,6 @@ void WorldWidget::draw() {
       item->draw(this);
    }
    fl_pop_clip();
-
-   fl_color(FL_BLACK);
-   std::ostringstream os;
-   os << "Timer: " << std::setprecision(2) << std::fixed << world->simulationTime;
-   fl_draw(os.str().data(), x() + 5, y() + 15);
 }
 
 void WorldWidget::parseFile(const std::string& fileName) {
@@ -132,8 +127,8 @@ void WorldWidget::parseFile(const std::string& fileName) {
    std::cout << "Parsing success for " << fileName << std::endl;
    file.close();
    size(
-         int(canvas->w() * scale->getRatio()),
-         int(canvas->h() * scale->getRatio())
+         int(canvas->w() * scale->getScaleRatio()),
+         int(canvas->h() * scale->getScaleRatio())
    );
 }
 
@@ -143,5 +138,13 @@ void WorldWidget::setPaused(bool paused) {
 
 bool WorldWidget::getPaused() const {
    return simulationPaused;
+}
+
+void WorldWidget::updateTimeLabel() {
+   std::ostringstream os;
+   os << "Timer: " << std::setprecision(2) << std::fixed
+      << world->simulationTime;
+   timeLabel = os.str();
+   parent()->label(timeLabel.c_str());
 }
 

@@ -15,6 +15,9 @@ private:
    static const int MAX_COLOR = 8;
    const std::array<int, MAX_COLOR> colors = {FL_BLACK, FL_WHITE, FL_RED, 90,
                                               FL_YELLOW, FL_GREEN, FL_BLUE, 161};
+
+   void updateTimeLabel();
+   std::string timeLabel;
 public:
    WorldWidget(int x, int y, int w, int h);
 

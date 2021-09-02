@@ -9,13 +9,15 @@ public:
 
    unsigned getNPixels() const;
 
-   double getRatio() const;
+   double getScaleRatio() const;
 
 private:
    unsigned xWorld;
    unsigned nPixels;
    unsigned tWorld;
    unsigned nRefresh;
+
+   double getTimeRatio() const;
 };
 
 

@@ -30,7 +30,7 @@ Particule::Particule(
 
 void Particule::draw(WorldWidget* widget) const {
    fl_color(color);
-   double ratio = widget->scale->getRatio();
+   double ratio = widget->scale->getScaleRatio();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
    int posX = (int) (widget->x() + (position.x - radius + offsetX) * ratio);

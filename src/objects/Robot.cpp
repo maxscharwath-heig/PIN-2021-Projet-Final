@@ -14,7 +14,7 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
       rightSpeed(rightSpeed) {}
 
 void Robot::draw(WorldWidget* widget) const {
-   double ratio = widget->scale->getRatio();
+   double ratio = widget->scale->getScaleRatio();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
@@ -66,12 +66,9 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
    if (vg == vd) {//linear
       dX = vg * cos(a) * t;
       dY = vg * sin(a) * t;
-   } else if (vg == -vd) {//rotate
-      prediction->orientation += vg * t;
    } else {//circle
       double R = radius * (vg + vd) / (vg - vd);
-      double vT = (vg + vd) / 2.0;
-      double w = vT / R * t;
+      double w = (vg - vd) / (radius * 2.0) * t;
       dX = R * (cos(a) * sin(w) - sin(a) * (1 - cos(w)));
       dY = R * (sin(a) * sin(w) + cos(a) * (1 - cos(w)));
       prediction->orientation += w * 180.0 / M_PI;
