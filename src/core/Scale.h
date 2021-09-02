@@ -5,19 +5,14 @@ class Scale {
 public:
    Scale(unsigned xWorld, unsigned nPixels, unsigned tWorld, unsigned nRefresh);
 
-   unsigned getXWorld() const;
-
-   unsigned getNPixels() const;
-
-   double getScaleRatio() const;
+   double time() const;
+   double distance() const;
 
 private:
    unsigned xWorld;
    unsigned nPixels;
    unsigned tWorld;
    unsigned nRefresh;
-
-   double getTimeRatio() const;
 };
 
 

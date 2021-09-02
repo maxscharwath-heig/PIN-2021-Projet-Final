@@ -5,10 +5,12 @@ Scale::Scale(unsigned int xWorld, unsigned int nPixels, unsigned tWorld,
                                   nPixels(nPixels), tWorld(tWorld),
                                   nRefresh(nRefresh) {}
 
-double Scale::getScaleRatio() const {
+double Scale::time() const
+{
    return double(xWorld) / double(nPixels);
 }
 
-double Scale::getTimeRatio() const {
+double Scale::distance() const
+{
    return double(tWorld) / double(nRefresh);
 }

@@ -3,8 +3,7 @@
 
 void Canvas::draw(Fl_Widget* parent, Canvas* canvas, Scale* scale) const {
    fl_color(color);
-   fl_rectf(parent->x(), parent->y(), w() * scale->getScaleRatio(),
-            h() * scale->getScaleRatio());
+   fl_rectf(parent->x(), parent->y(), w() * scale->distance(), h() * scale->distance());
 }
 
 Canvas::Canvas(int xMin, int yMin, int xMax, int yMax, unsigned tMaxV, int pMin,

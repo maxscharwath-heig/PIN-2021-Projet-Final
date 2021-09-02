@@ -105,6 +105,7 @@ void WorldWidget::parseFile(const std::string& fileName) {
                case 1: {
                   if (args[4] < 0 || args[4] > MAX_COLOR - 1)
                      throw std::invalid_argument("Invalid color");
+
                   world->addParticule(new Particule(
                         {double(args[1]), double(args[2])},
                         args[3],
@@ -124,12 +125,8 @@ void WorldWidget::parseFile(const std::string& fileName) {
       }
       ++nbLine;
    }
-   std::cout << "Parsing success for " << fileName << std::endl;
    file.close();
-   size(
-         int(canvas->w() * scale->getScaleRatio()),
-         int(canvas->h() * scale->getScaleRatio())
-   );
+   size(int(canvas->w() * scale->distance()),int(canvas->h() * scale->distance()));
 }
 
 void WorldWidget::setPaused(bool paused) {

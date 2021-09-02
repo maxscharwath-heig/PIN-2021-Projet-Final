@@ -1,12 +1,15 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <FL/Fl.H>
+#include "FL/fl_ask.H"
 #include "MainWindow.h"
 #include "Fl_Center_Scroll.h"
+#include "../utils/Defaults.h"
 
 const int MainWindow::MIN_WIDTH = 750;
 const int MainWindow::MIN_HEIGHT = 300;
-const char MainWindow::DEFAULT_LABEL[] = "PIN-2021 Série 2";
+const char MainWindow::DEFAULT_LABEL[] = "PIN-2021 Projet Final";
 const double MainWindow::DEFAULT_SPEED = 1.0;
 
 MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
@@ -17,7 +20,7 @@ MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
    registerFileLoadButtons(this, this);
    registerSimulationButtons(this, this);
 
-   quitButton = new Fl_Button(w() - 100, 25, 50, 50, "quitter");
+   quitButton = new Fl_Button(w() - 100, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "quitter");
    quitButton->callback(quit_cb, this);
 
    scrollbars = new Fl_Center_Scroll(25, 100, w() - 50, h() - 125);
@@ -36,16 +39,16 @@ MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
 void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->fileLoadGroup = new Fl_Group(window->w() - 725, 25, 400, 50);
-   window->inputFile = new Fl_Input(25, 25, 225, 50, "Fichier");
+   window->fileLoadGroup = new Fl_Group(window->w() - 725, TOOLBAR_Y, 400, DEFAULT_BTN_H);
+   window->inputFile = new Fl_Input(25, TOOLBAR_Y, 225, DEFAULT_BTN_H, "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
    window->inputFile->value("demo_fltk.dat"); // Temporary for testing
 
-   window->openButton = new Fl_Button(window->w() - 480, 25, 50, 50, "ouvrir");
+   window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
 
-   window->eraseButton = new Fl_Button(window->w() - 410, 25, 50, 50, "effacer");
+   window->eraseButton = new Fl_Button(window->w() - 410, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "effacer");
    window->eraseButton->callback(erase_dp, window);
    window->fileLoadGroup->end();
 }
@@ -53,28 +56,28 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
 void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->simButtonsGroup = new Fl_Group(window->w() - 350, 25, 300, 50);
+   window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300, 50);
    {
-      window->fastLowerSpeedButton = new Fl_Button(window->w() - 350, 25, 15, 50,
+      window->fastLowerSpeedButton = new Fl_Button(window->w() - 350, TOOLBAR_Y, 15, DEFAULT_BTN_H,
                                                    "@<<");
-      window->lowerSpeedButton = new Fl_Button(window->w() - 335, 25, 15, 50, "@<");
+      window->lowerSpeedButton = new Fl_Button(window->w() - 335, TOOLBAR_Y, 15, DEFAULT_BTN_H, "@<");
       window->fastLowerSpeedButton->callback(fastLowerSpeed, window);
       window->lowerSpeedButton->callback(lowerSpeed, window);
 
-      window->speedInput = new Fl_Input(window->w() - 320, 25, 30, 50, "Vitesse");
+      window->speedInput = new Fl_Input(window->w() - 320, TOOLBAR_Y, 30, DEFAULT_BTN_H, "Vitesse");
       window->speedInput->align(FL_ALIGN_TOP_LEFT);
       updateSpeed(window, window);
 
-      window->greaterSpeedButton = new Fl_Button(window->w() - 290, 25, 15, 50, "@>");
-      window->fastGreaterSpeedButton = new Fl_Button(window->w() - 275, 25, 15, 50,
+      window->greaterSpeedButton = new Fl_Button(window->w() - 290, TOOLBAR_Y, 15, DEFAULT_BTN_H, "@>");
+      window->fastGreaterSpeedButton = new Fl_Button(window->w() - 275, TOOLBAR_Y, 15, DEFAULT_BTN_H,
                                                      "@>>");
       window->fastGreaterSpeedButton->callback(fastGreaterSpeed, window);
       window->greaterSpeedButton->callback(greaterSpeed, window);
 
-      window->resetButton = new Fl_Button(window->w() - 240, 25, 50, 50, "reset");
+      window->resetButton = new Fl_Button(window->w() - 240, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "reset");
       window->resetButton->callback(reset_speed, window);
 
-      window->playPauseButton = new Fl_Button(window->w() - 170, 25, 50, 50, "go");
+      window->playPauseButton = new Fl_Button(window->w() - 170, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "go");
       window->playPauseButton->callback(toggle_start_pause, window);
    }
    window->simButtonsGroup->end();
@@ -110,12 +113,16 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
    }
    catch (const std::exception& e) {
       window->label(DEFAULT_LABEL);
-      std::cout << "\a" << e.what() << std::endl;
+      std::cerr << e.what() << std::endl;
+
+      fl_beep(FL_BEEP_ERROR);
       return;
    }
 
    window->scrollbars->show();
    window->label(inputPath.substr(inputPath.find_last_of("/\\") + 1).data());
+
+   window->resize(window->x(), window->y(), window->getWidthAdaptingOnWorld(), window->getHeightAdaptingOnWorld());
 
    toggle_sim_buttons(window, data, true);
 }
@@ -190,6 +197,27 @@ void MainWindow::updateSpeed(Fl_Widget* widget, void* data) {
 
    WorldWidget::timeMultiplier = window->speedInputValue;
    window->speedInput->value(os.str().data());
+}
+
+int MainWindow::getHeightAdaptingOnWorld()
+{
+   if (Fl::w() < worldWidget->w()) {
+      return Fl::h();
+   } else if (MIN_HEIGHT >= worldWidget->h()) {
+      return MIN_HEIGHT;
+   }
+   return worldWidget->y() + worldWidget->h() + MARGIN * w();
+}
+
+int MainWindow::getWidthAdaptingOnWorld()
+{
+   if (Fl::w() < worldWidget->w()) {
+      return Fl::w();
+   }
+   else if (MIN_WIDTH >= worldWidget->w()) {
+      return MIN_WIDTH;
+   }
+   return worldWidget->w() + MARGIN * w();
 }
 
 
