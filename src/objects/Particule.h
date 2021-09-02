@@ -11,12 +11,9 @@ private:
    const int radius;
    int color;
    unsigned decomposeIndex;
-   const unsigned parentDecomposeIndex;
    unsigned destroyIndex;
-   const unsigned parentDestroyIndex;
    unsigned decomposeLevel;
    unsigned tmaxe;
-   unsigned parentLife;
    double timeOfDestroy;
    double timeOfDecompose;
    const unsigned id;
@@ -36,14 +33,11 @@ public:
 
    std::vector<Particule*> createChilds(double currentTime) const;
 
-   void decreaseIndexes(size_t diff = 1);
-
    void draw(WorldWidget* widget) const;
 
    double getDecomposeTime() const;
 
    double getDestroyTime() const;
-
 
    void explode();
 };
