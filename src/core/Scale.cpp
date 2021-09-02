@@ -12,5 +12,5 @@ double Scale::time() const
 
 double Scale::distance() const
 {
-   return double(xWorld) / double(nPixels);
+   return double(nPixels) / double(xWorld);
 }

@@ -20,19 +20,20 @@ Particule::Particule(
       destroyIndex(destroyIndex),
       decomposeLevel(decomposeLevel),
       tmaxe(tmaxe),
-      id(id)
-      {
-         timeOfDestroy = currentTime + getLifetimeUntilDeath(id, destroyIndex);
-         timeOfDecompose = currentTime + getLifetimeUntilDeath(id, decomposeIndex);
-      }
+      id(id) {
+   timeOfDestroy = currentTime + getLifetimeUntilDeath(id, destroyIndex);
+   timeOfDecompose = currentTime + getLifetimeUntilDeath(id, decomposeIndex);
+}
 
 void Particule::draw(WorldWidget* widget) const {
    fl_color(color);
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
-   int posX = (int) (widget->x() + (position.x - radius + offsetX));
-   int posY = (int) (widget->y() + (position.y - radius + offsetY));
-   int size = (int) (radius * 2.0);
+   int posX = (int) (widget->x() +
+                     (position.x - radius + offsetX) * widget->scale->distance());
+   int posY = (int) (widget->y() +
+                     (position.y - radius + offsetY) * widget->scale->distance());
+   int size = (int) (radius * 2.0 * widget->scale->distance());
    fl_pie(posX, posY, size, size, 0, 360);
 }
 
@@ -51,17 +52,17 @@ std::vector<Particule*> Particule::createChilds(double currentTime) const {
          new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
                        color,
                        decomposeIndex, destroyIndex,
-                       currentTime, tmaxe,id + 2,decomposeLevel + 1));
+                       currentTime, tmaxe, id + 2, decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x - newRadius, position.y + newRadius}, newRadius,
                        color,
                        decomposeIndex, destroyIndex,
-                       currentTime, tmaxe, id + 3,decomposeLevel + 1));
+                       currentTime, tmaxe, id + 3, decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
                        color,
                        decomposeIndex, destroyIndex,
-                       currentTime, tmaxe,id + 4,decomposeLevel + 1));
+                       currentTime, tmaxe, id + 4, decomposeLevel + 1));
    return children;
 }
 
@@ -79,7 +80,8 @@ unsigned Particule::getDecomposeLevel() const {
 
 void Particule::explode() {
    if (!world) return;
-   if (getDecomposeTime() <= getDestroyTime() && getDecomposeLevel() <= DECOMPOSE_LEVEL) {
+   if (getDecomposeTime() <= getDestroyTime() &&
+       getDecomposeLevel() <= DECOMPOSE_LEVEL) {
       for (Particule* part: createChilds(world->simulationTime)) {
          world->addParticule(part);
       }
@@ -87,18 +89,15 @@ void Particule::explode() {
    world->deleteParticule(this);
 }
 
-unsigned Particule::getLifetimeUntilDeath(unsigned n, unsigned index) const
-{
+unsigned Particule::getLifetimeUntilDeath(unsigned n, unsigned index) const {
    if (n <= 1) return index;
-   return (getLifetimeUntilDeath(n-1, index) * index) % tmaxe;
+   return (getLifetimeUntilDeath(n - 1, index) * index) % tmaxe;
 }
 
-double Particule::getDecomposeTime() const
-{
+double Particule::getDecomposeTime() const {
    return timeOfDecompose;
 }
 
-double Particule::getDestroyTime() const
-{
+double Particule::getDestroyTime() const {
    return timeOfDestroy;
 }
