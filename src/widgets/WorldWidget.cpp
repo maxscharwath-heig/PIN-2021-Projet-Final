@@ -15,10 +15,6 @@ WorldWidget::WorldWidget(int x, int y, int w, int h) : Fl_Widget(x, y, w, h, "")
    canvas = nullptr;
    scale = nullptr;
    this->lastTickTime = std::chrono::high_resolution_clock::now();
-
-   // TODO: Change cycles values
-   Fl::add_timeout(refreshCycle, perform, (void*) this);
-   Fl::add_timeout(refreshCycle, refreshView, (void*) this);
 }
 
 void WorldWidget::perform(void* userdata) {
@@ -122,7 +118,8 @@ void WorldWidget::parseFile(const std::string& fileName) {
                         colors[args[4]],
                         args[5],
                         args[6],
-                        canvas->TMAXE()
+                        canvas->TMAXE(),
+                        scale->time()
                   ));
                }
                   break;
@@ -135,6 +132,10 @@ void WorldWidget::parseFile(const std::string& fileName) {
    }
    file.close();
    size(canvas->w(scale->distance()), canvas->h(scale->distance()));
+
+   // TODO: Change cycles values
+   Fl::add_timeout(refreshCycle, perform, (void*) this);
+   Fl::add_timeout(refreshCycle, refreshView, (void*) this);
 }
 
 void WorldWidget::setPaused(bool paused) {

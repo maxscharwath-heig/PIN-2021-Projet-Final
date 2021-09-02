@@ -17,10 +17,10 @@ private:
    double timeOfDestroy;
    double timeOfDecompose;
    double parentTime;
+   double timeScale;
    unsigned id;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
-
 
 public:
    Particule(
@@ -30,13 +30,14 @@ public:
          unsigned decomposeIndex,
          unsigned destroyIndex,
          unsigned tmaxe,
+         double timeScale,
          double parentTime = 0,
          unsigned decomposeLevel = 1
    );
 
    unsigned getDecomposeLevel() const;
 
-   std::vector<Particule*> createChilds(double currentTime) const;
+   std::vector<Particule*> createChilds() const;
 
    void update(WorldWidget* widget, double deltaTime) override;
 
