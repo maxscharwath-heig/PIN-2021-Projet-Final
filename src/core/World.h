@@ -7,6 +7,8 @@
 #include "Canvas.h"
 
 class World {
+private:
+   int particleCounter;
 public:
    void clear();
 

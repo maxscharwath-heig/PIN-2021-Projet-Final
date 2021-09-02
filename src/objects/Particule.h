@@ -16,14 +16,23 @@ private:
    unsigned tmaxe;
    double timeOfDestroy;
    double timeOfDecompose;
-   const unsigned id;
+   double parentTime;
+   unsigned id;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
 
 
 public:
-   Particule(Position position, int radius, int color, unsigned decomposeIndex,
-             unsigned destroyIndex, double currentTime, unsigned tmaxe, unsigned id, unsigned decomposeLevel = 1);
+   Particule(
+         Position position,
+         int radius,
+         int color,
+         unsigned decomposeIndex,
+         unsigned destroyIndex,
+         unsigned tmaxe,
+         double parentTime = 0,
+         unsigned decomposeLevel = 1
+   );
 
    unsigned getDecomposeLevel() const;
 
@@ -38,6 +47,8 @@ public:
    double getDestroyTime() const;
 
    void explode();
+
+   void init(unsigned id);
 };
 
 

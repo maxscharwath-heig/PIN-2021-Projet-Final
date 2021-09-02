@@ -9,20 +9,18 @@ Particule::Particule(
       int color,
       unsigned decomposeIndex,
       unsigned destroyIndex,
-      double currentTime,
       unsigned tmaxe,
-      const unsigned id,
-      unsigned decomposeLevel) :
+      double parentTime,
+      unsigned decomposeLevel
+) :
       Object(position),
       radius(radius),
       color(color),
       decomposeIndex(decomposeIndex),
       destroyIndex(destroyIndex),
       decomposeLevel(decomposeLevel),
-      tmaxe(tmaxe),
-      id(id) {
-   timeOfDestroy = currentTime + getLifetimeUntilDeath(id, destroyIndex);
-   timeOfDecompose = currentTime + getLifetimeUntilDeath(id, decomposeIndex);
+      parentTime(parentTime),
+      tmaxe(tmaxe) {
 }
 
 void Particule::draw(WorldWidget* widget) const {
@@ -43,27 +41,27 @@ std::vector<Particule*> Particule::createChilds(double currentTime) const {
    children.reserve(4);
 
    const int newRadius = radius / 2;
+   children.emplace_back(
+         new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
+                       color,
+                       decomposeIndex, destroyIndex, tmaxe, timeOfDecompose,
+                       decomposeLevel + 1));
+   children.emplace_back(
+         new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
+                       color,
+                       decomposeIndex, destroyIndex, tmaxe, timeOfDecompose,
+                       decomposeLevel + 1));
+   children.emplace_back(
+         new Particule({position.x - newRadius, position.y + newRadius}, newRadius,
+                       color,
+                       decomposeIndex, destroyIndex, tmaxe, timeOfDecompose,
+                       decomposeLevel + 1));
 
    children.emplace_back(
          new Particule({position.x - newRadius, position.y - newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex,
-                       currentTime, tmaxe, id + 1, decomposeLevel + 1));
-   children.emplace_back(
-         new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
-                       color,
-                       decomposeIndex, destroyIndex,
-                       currentTime, tmaxe, id + 2, decomposeLevel + 1));
-   children.emplace_back(
-         new Particule({position.x - newRadius, position.y + newRadius}, newRadius,
-                       color,
-                       decomposeIndex, destroyIndex,
-                       currentTime, tmaxe, id + 3, decomposeLevel + 1));
-   children.emplace_back(
-         new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
-                       color,
-                       decomposeIndex, destroyIndex,
-                       currentTime, tmaxe, id + 4, decomposeLevel + 1));
+                       decomposeIndex, destroyIndex, tmaxe, timeOfDecompose,
+                       decomposeLevel + 1));
    return children;
 }
 
@@ -95,8 +93,14 @@ double Particule::getDestroyTime() const {
    return timeOfDestroy;
 }
 
-void Particule::update(WorldWidget *widget, double deltaTime)
-{
+void Particule::update(WorldWidget* widget, double deltaTime) {
    // TODO: Call explode from here ?
 
+}
+
+void Particule::init(unsigned id) {
+   this->id = id;
+   //todo scale...
+   timeOfDestroy = parentTime + getLifetimeUntilDeath(id, destroyIndex) / 10.0;
+   timeOfDecompose = parentTime + getLifetimeUntilDeath(id, decomposeIndex) / 10.0;
 }

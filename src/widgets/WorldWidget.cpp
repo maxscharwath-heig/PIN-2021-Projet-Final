@@ -30,7 +30,7 @@ void WorldWidget::perform(void* userdata) {
 
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
-      o->world->update(o,deltaTime);
+      o->world->update(o, deltaTime);
    }
    Fl::repeat_timeout(refreshCycle, perform, userdata);
 }
@@ -122,9 +122,7 @@ void WorldWidget::parseFile(const std::string& fileName) {
                         colors[args[4]],
                         args[5],
                         args[6],
-                        world->simulationTime,
-                        canvas->TMAXE(),
-                        1
+                        canvas->TMAXE()
                   ));
                }
                   break;
