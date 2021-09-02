@@ -13,7 +13,7 @@ const char MainWindow::DEFAULT_LABEL[] = "PIN-2021 Projet Final";
 const double MainWindow::DEFAULT_SPEED = 1.0;
 
 MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
-                           speedInputValue(DEFAULT_SPEED) {
+                           speedCounterValue(DEFAULT_SPEED) {
    size_range(MIN_WIDTH, MIN_HEIGHT);
    begin();
 
@@ -58,20 +58,14 @@ void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
 
    window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300, DEFAULT_BTN_H);
    {
-      window->fastLowerSpeedButton = new Fl_Button(window->w() - 350, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H,
-                                                   "@<<");
-      window->lowerSpeedButton = new Fl_Button(window->w() - 335, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H, "@<");
-      window->fastLowerSpeedButton->callback(fastLowerSpeed, window);
-      window->lowerSpeedButton->callback(lowerSpeed, window);
-
-      window->speedInput = new Fl_Input(window->w() - 320, TOOLBAR_Y, SMALL_INPUT_W, DEFAULT_BTN_H, "Vitesse");
-      window->speedInput->align(FL_ALIGN_TOP_LEFT);
+      window->speedCounter = new Fl_Counter(window->w() - 350, TOOLBAR_Y, LARGE_BTN_W, DEFAULT_BTN_H, "Vitesse");
+      window->speedCounter->align(FL_ALIGN_TOP_LEFT);
+      window->speedCounter->value(DEFAULT_SPEED);
+      window->speedCounter->minimum(MIN_SPEED_COUNTER);
+      window->speedCounter->maximum(MAX_SPEED_COUNTER);
+      window->speedCounter->callback(updateSpeed, window);
+      window->speedCounter->when(1);
       updateSpeed(window, window);
-
-      window->greaterSpeedButton = new Fl_Button(window->w() - 290, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H, "@>");
-      window->fastGreaterSpeedButton = new Fl_Button(window->w() - 275, TOOLBAR_Y, SMALL_BTN_W, DEFAULT_BTN_H,"@>>");
-      window->fastGreaterSpeedButton->callback(fastGreaterSpeed, window);
-      window->greaterSpeedButton->callback(greaterSpeed, window);
 
       window->resetButton = new Fl_Button(window->w() - 240, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "reset");
       window->resetButton->callback(reset_speed, window);
@@ -107,7 +101,7 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
 
    try {
       window->worldWidget->parseFile(inputPath);
-      WorldWidget::timeMultiplier = window->speedInputValue;
+      WorldWidget::timeMultiplier = window->speedCounterValue;
    }
    catch (const std::exception& e) {
       window->label(DEFAULT_LABEL);
@@ -149,53 +143,16 @@ void MainWindow::toggle_start_pause(Fl_Widget* widget, void* data) {
 void MainWindow::reset_speed(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->speedInputValue = DEFAULT_SPEED;
+   window->speedCounter->value(DEFAULT_SPEED);
    updateSpeed(window, window);
 }
 
-void MainWindow::fastLowerSpeed(Fl_Widget* widget, void* data) {
-   auto* window = (MainWindow*) data;
-
-   if (window->speedInputValue <= 1.0) {
-      window->speedInputValue = 0.1;
-   } else {
-      --window->speedInputValue;
-   }
-   updateSpeed(window, window);
-}
-
-void MainWindow::lowerSpeed(Fl_Widget* widget, void* data) {
-   auto* window = (MainWindow*) data;
-
-   if (window->speedInputValue <= 0.2) {
-      window->speedInputValue = 0.1;
-   } else {
-      window->speedInputValue -= 0.1;
-   }
-   updateSpeed(window, window);
-}
-
-void MainWindow::fastGreaterSpeed(Fl_Widget* widget, void* data) {
-   auto* window = (MainWindow*) data;
-   window->speedInputValue++;    // Is there a max speed ?
-   updateSpeed(window, window);
-}
-
-void MainWindow::greaterSpeed(Fl_Widget* widget, void* data) {
-   auto* window = (MainWindow*) data;
-   window->speedInputValue += 0.1;
-
-   updateSpeed(window, window);
-}
 
 void MainWindow::updateSpeed(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   std::ostringstream os;
-   os << std::setprecision(4) << window->speedInputValue;
-
-   WorldWidget::timeMultiplier = window->speedInputValue;
-   window->speedInput->value(os.str().data());
+   window->speedCounterValue = window->speedCounter->value();
+   WorldWidget::timeMultiplier = window->speedCounter->value();
 }
 
 int MainWindow::getFittedH()

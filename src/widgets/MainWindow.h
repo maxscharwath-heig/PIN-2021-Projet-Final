@@ -6,6 +6,7 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Scrollbar.H>
 #include <FL/Fl_Scroll.H>
+#include <Fl/Fl_Counter.H>
 #include "WorldWidget.h"
 #include "../core/World.h"
 
@@ -17,17 +18,13 @@ class MainWindow : public Fl_Window {
 
    Fl_Group* fileLoadGroup, * simButtonsGroup;
 
-   Fl_Input* inputFile, * speedInput;
+   Fl_Input* inputFile;
+   Fl_Counter* speedCounter;
    Fl_Button* openButton,
          * eraseButton,
          * resetButton,
          * playPauseButton,
          * quitButton;
-
-   Fl_Button* fastLowerSpeedButton,
-         * lowerSpeedButton,
-         * greaterSpeedButton,
-         * fastGreaterSpeedButton;
 
    WorldWidget* worldWidget;
    Fl_Scroll* scrollbars;
@@ -50,14 +47,6 @@ private:
 
    static void toggle_sim_buttons(Fl_Widget* widget, void* data, bool shouldShow);
 
-   static void fastLowerSpeed(Fl_Widget* widget, void* data);
-
-   static void lowerSpeed(Fl_Widget* widget, void* data);
-
-   static void fastGreaterSpeed(Fl_Widget* widget, void* data);
-
-   static void greaterSpeed(Fl_Widget* widget, void* data);
-
    static void toggle_start_pause(Fl_Widget* widget, void* data);
 
    static void reset_speed(Fl_Widget* widget, void* data);
@@ -68,7 +57,7 @@ private:
 
    int getFittedH();
 
-   double speedInputValue;
+   double speedCounterValue;
 };
 
 #endif //PIN_2021_SERIE_1_MAINWINDOW_H
