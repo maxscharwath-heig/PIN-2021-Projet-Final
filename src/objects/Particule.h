@@ -18,6 +18,7 @@ private:
    double timeOfDecompose;
    double parentTime;
    double timeScale;
+   int energy;
    unsigned id;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
@@ -31,6 +32,7 @@ public:
          unsigned destroyIndex,
          unsigned tmaxe,
          double timeScale,
+         int energy,
          double parentTime = 0,
          unsigned decomposeLevel = 1
    );
@@ -50,6 +52,8 @@ public:
    void explode();
 
    void init(unsigned id);
+
+   static int getBaseEnergy(int radius, double scale);
 };
 
 

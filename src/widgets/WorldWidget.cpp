@@ -126,7 +126,8 @@ void WorldWidget::parseFile(const std::string& fileName) {
                         args[5],
                         args[6],
                         canvas->TMAXE(),
-                        scale->time()
+                        scale->time(),
+                        Particule::getBaseEnergy(args[3], scale->distance())
                   ));
                }
                   break;

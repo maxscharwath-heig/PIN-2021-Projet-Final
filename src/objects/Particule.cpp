@@ -1,5 +1,7 @@
 #include "Particule.h"
 #include <FL/FL_Draw.H>
+#include <cmath>
+#include <iostream>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 
@@ -11,6 +13,7 @@ Particule::Particule(
       unsigned destroyIndex,
       unsigned tmaxe,
       double timeScale,
+      int energy,
       double parentTime,
       unsigned decomposeLevel
 ) :
@@ -22,7 +25,8 @@ Particule::Particule(
       decomposeLevel(decomposeLevel),
       tmaxe(tmaxe),
       parentTime(parentTime),
-      timeScale(timeScale) {
+      timeScale(timeScale),
+      energy(energy) {
 }
 
 void Particule::draw(WorldWidget* widget) const {
@@ -43,15 +47,17 @@ std::vector<Particule*> Particule::createChilds() const {
    children.reserve(4);
 
    const int newRadius = radius / 2;
+   const int newEnergy = energy / 2;
+
    children.emplace_back(
          new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
                        decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
                        decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x - newRadius, position.y + newRadius},
@@ -61,14 +67,16 @@ std::vector<Particule*> Particule::createChilds() const {
                        destroyIndex,
                        tmaxe,
                        timeScale,
+                       newEnergy,
                        timeOfDecompose,
                        decomposeLevel + 1));
 
    children.emplace_back(
          new Particule({position.x - newRadius, position.y - newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
                        decomposeLevel + 1));
+
    return children;
 }
 
@@ -109,4 +117,9 @@ void Particule::init(unsigned id) {
    this->id = id;
    timeOfDestroy = parentTime + getLifetimeUntilDeath(id, destroyIndex) * timeScale;
    timeOfDecompose = parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;
+}
+
+int Particule::getBaseEnergy(int radius, double scale)
+{
+   return (int)(M_PI * pow(radius * scale, 2));
 }
