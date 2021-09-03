@@ -14,7 +14,7 @@ class Robot : public Object {
 private:
    const int radius;
    double orientation;
-   int leftSpeed, rightSpeed;
+   double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
 
    double getAlignementWithParticle(Particule* particule);

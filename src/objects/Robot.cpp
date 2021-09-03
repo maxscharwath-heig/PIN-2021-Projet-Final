@@ -82,6 +82,9 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 }
 
 void Robot::update(WorldWidget* widget, double deltaTime) {
+
+   goToParticule(100, world->particules.front());
+
    if (!actions.empty()) {
       auto last = actions.front();
       if (world->simulationTime >= last.time) {
@@ -175,10 +178,12 @@ double Robot::getAlignementWithParticle(Particule* particule) {
 }
 
 void Robot::goToParticule(int speed, Particule* particule) {
-   double M = position.getDistance(particule->getPosition()) / 2.0;
-   double alpha = 90 - orientation - position.getAngle(particule->getPosition());
-   double R = M / cos(alpha / 180 * M_PI);
+   double a = orientation * M_PI / 180.0;
+   Position A = position;
+   Position B = particule->getPosition();
+   Position d = {cos(a), sin(a)};
+   double R = (sqrt(d.x * d.x + d.y * d.y) * A.getDistance(B)) /
+              (-d.y * (B.x - A.x) + d.x * (B.y - A.y)) * A.getDistance(B) / 2;
    rightSpeed = speed;
-   leftSpeed = (int) ((R + radius) / (R - radius) * speed);
-   std::cout << rightSpeed << " " << leftSpeed << std::endl;
+   leftSpeed = ((R + radius) / (R - radius) * speed);
 }

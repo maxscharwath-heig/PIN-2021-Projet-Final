@@ -96,7 +96,4 @@ int World::getCleanedEnergy() const {
 }
 
 void World::ready() {
-   for (const auto& item: robots) {
-      item->goToParticule(100, particules.front());
-   }
 }
