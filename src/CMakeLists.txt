@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 FIND_PACKAGE(FLTK REQUIRED NO_MODULE)
 
-add_executable(Serie2 WIN32 MACOSX_BUNDLE main.cpp widgets/WorldWidget.cpp widgets/WorldWidget.h widgets/MainWindow.cpp widgets/MainWindow.h core/World.cpp core/World.h core/Scale.cpp core/Scale.h core/Canvas.cpp core/Canvas.h objects/Particule.cpp objects/Particule.h objects/Robot.cpp objects/Robot.h objects/Object.cpp objects/Object.h widgets/Fl_Center_Scroll.h utils/Defaults.h utils/Logger.h utils/Logger.cpp)
+add_executable(Serie2 WIN32 MACOSX_BUNDLE main.cpp widgets/WorldWidget.cpp widgets/WorldWidget.h widgets/MainWindow.cpp widgets/MainWindow.h core/World.cpp core/World.h core/Scale.cpp core/Scale.h core/Canvas.cpp core/Canvas.h objects/Particule.cpp objects/Particule.h objects/Robot.cpp objects/Robot.h objects/Object.cpp objects/Object.h widgets/Fl_Center_Scroll.h utils/Defaults.h utils/Logger.h utils/Logger.cpp utils/Simulator.cpp utils/Simulator.h)
 
 if (APPLE)
     target_link_libraries(Serie2 "-framework cocoa")
