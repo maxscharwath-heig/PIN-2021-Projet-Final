@@ -20,11 +20,11 @@ int Canvas::y() const {
 }
 
 int Canvas::w(double scale) const {
-   return (int)((xMax - xMin) * scale);
+   return (int) ((xMax - xMin) * scale);
 }
 
 int Canvas::h(double scale) const {
-   return (int)((yMax - yMin) * scale);
+   return (int) ((yMax - yMin) * scale);
 }
 
 unsigned Canvas::TMAXE() const {

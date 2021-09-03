@@ -20,7 +20,8 @@ MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
    registerFileLoadButtons(this, this);
    registerSimulationButtons(this, this);
 
-   quitButton = new Fl_Button(w() - 100, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "quitter");
+   quitButton = new Fl_Button(w() - 100, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H,
+                              "quitter");
    quitButton->callback(quit_cb, this);
 
    scrollbars = new Fl_Center_Scroll(25, 100, w() - 50, h() - 125);
@@ -39,16 +40,20 @@ MainWindow::MainWindow() : Fl_Window(MIN_WIDTH, MIN_HEIGHT, DEFAULT_LABEL),
 void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->fileLoadGroup = new Fl_Group(window->w() - 725, TOOLBAR_Y, 400, DEFAULT_BTN_H);
-   window->inputFile = new Fl_Input(TOOLBAR_Y, TOOLBAR_Y, INPUT_W, DEFAULT_BTN_H, "Fichier");
+   window->fileLoadGroup = new Fl_Group(window->w() - 725, TOOLBAR_Y, 400,
+                                        DEFAULT_BTN_H);
+   window->inputFile = new Fl_Input(TOOLBAR_Y, TOOLBAR_Y, INPUT_W, DEFAULT_BTN_H,
+                                    "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
    window->inputFile->value("demo.dat"); // Temporary for testing
 
-   window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "ouvrir");
+   window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W,
+                                      DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
 
-   window->eraseButton = new Fl_Button(window->w() - 410, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "effacer");
+   window->eraseButton = new Fl_Button(window->w() - 410, TOOLBAR_Y, DEFAULT_BTN_W,
+                                       DEFAULT_BTN_H, "effacer");
    window->eraseButton->callback(erase_dp, window);
    window->fileLoadGroup->end();
 }
@@ -56,9 +61,11 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
 void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 
-   window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300, DEFAULT_BTN_H);
+   window->simButtonsGroup = new Fl_Group(window->w() - 350, TOOLBAR_Y, 300,
+                                          DEFAULT_BTN_H);
    {
-      window->speedCounter = new Fl_Counter(window->w() - 350, TOOLBAR_Y, LARGE_BTN_W, DEFAULT_BTN_H, "Vitesse");
+      window->speedCounter = new Fl_Counter(window->w() - 350, TOOLBAR_Y,
+                                            LARGE_BTN_W, DEFAULT_BTN_H, "Vitesse");
       window->speedCounter->align(FL_ALIGN_TOP_LEFT);
       window->speedCounter->value(DEFAULT_SPEED);
       window->speedCounter->minimum(MIN_SPEED_COUNTER);
@@ -67,10 +74,12 @@ void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
       window->speedCounter->when(1);
       updateSpeed(window, window);
 
-      window->resetButton = new Fl_Button(window->w() - 240, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "reset");
+      window->resetButton = new Fl_Button(window->w() - 240, TOOLBAR_Y,
+                                          DEFAULT_BTN_W, DEFAULT_BTN_H, "reset");
       window->resetButton->callback(reset_speed, window);
 
-      window->playPauseButton = new Fl_Button(window->w() - 170, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "go");
+      window->playPauseButton = new Fl_Button(window->w() - 170, TOOLBAR_Y,
+                                              DEFAULT_BTN_W, DEFAULT_BTN_H, "go");
       window->playPauseButton->callback(toggle_start_pause, window);
    }
    window->simButtonsGroup->end();
@@ -117,7 +126,8 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
 
    updateScoreLabel(window, data, 0);
 
-   window->resize(window->x(), window->y(), window->getFittedW(), window->getFittedH());
+   window->resize(window->x(), window->y(), window->getFittedW(),
+                  window->getFittedH());
 
    toggle_sim_buttons(window, data, true);
 }
@@ -136,8 +146,7 @@ void MainWindow::toggle_start_pause(Fl_Widget* widget, void* data) {
    if (window->worldWidget->getPaused()) {
       window->playPauseButton->label("go");
       window->fileLoadGroup->activate();
-   }
-   else {
+   } else {
       window->playPauseButton->label("pause");
       window->fileLoadGroup->deactivate();
    }
@@ -157,28 +166,29 @@ void MainWindow::updateSpeed(Fl_Widget* widget, void* data) {
    WorldWidget::timeMultiplier = window->speedCounter->value();
 }
 
-int MainWindow::getFittedH()
-{
+int MainWindow::getFittedH() {
    if (Fl::w() < worldWidget->w()) {
       return Fl::h();
    }
-   return MIN_HEIGHT >= worldWidget->h() ? MIN_HEIGHT : worldWidget->y() + worldWidget->h() + MARGIN * w();
+   return MIN_HEIGHT >= worldWidget->h() ? MIN_HEIGHT : worldWidget->y() +
+                                                        worldWidget->h() +
+                                                        MARGIN * w();
 }
 
-int MainWindow::getFittedW()
-{
+int MainWindow::getFittedW() {
    if (Fl::w() < worldWidget->w()) {
       return Fl::w();
    }
-   return MIN_WIDTH >= worldWidget->w() ? MIN_WIDTH : worldWidget->w() + MARGIN * w();
+   return MIN_WIDTH >= worldWidget->w() ? MIN_WIDTH : worldWidget->w() +
+                                                      MARGIN * w();
 }
 
-void MainWindow::updateScoreLabel(Fl_Widget *widget, void *data, unsigned newScore)
-{
+void MainWindow::updateScoreLabel(Fl_Widget* widget, void* data, unsigned newScore) {
    auto* window = (MainWindow*) data;
 
    std::stringstream ss;
-   ss << window->loadedFilename + " - " << std::setfill('0') << std::setw(3) << newScore << "%";
+   ss << window->loadedFilename + " - " << std::setfill('0') << std::setw(3)
+      << newScore << "%";
 
    window->label(ss.str().data());
 }

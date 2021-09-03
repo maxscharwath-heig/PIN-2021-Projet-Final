@@ -52,12 +52,14 @@ std::vector<Particule*> Particule::createChilds() const {
    children.emplace_back(
          new Particule({position.x + newRadius, position.y - newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy,
+                       timeOfDecompose,
                        decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x + newRadius, position.y + newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy,
+                       timeOfDecompose,
                        decomposeLevel + 1));
    children.emplace_back(
          new Particule({position.x - newRadius, position.y + newRadius},
@@ -74,7 +76,8 @@ std::vector<Particule*> Particule::createChilds() const {
    children.emplace_back(
          new Particule({position.x - newRadius, position.y - newRadius}, newRadius,
                        color,
-                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy, timeOfDecompose,
+                       decomposeIndex, destroyIndex, tmaxe, timeScale, newEnergy,
+                       timeOfDecompose,
                        decomposeLevel + 1));
 
    return children;
@@ -116,11 +119,12 @@ void Particule::update(WorldWidget* widget, double deltaTime) {
 void Particule::init(unsigned id) {
    this->id = id;
    timeOfDestroy = parentTime + getLifetimeUntilDeath(id, destroyIndex) * timeScale;
-   timeOfDecompose = parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;
+   timeOfDecompose =
+         parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;
 }
 
 int Particule::getBaseEnergy(int radius, double scale) {
-   return (int)(M_PI * pow(radius * scale, 2));
+   return (int) (M_PI * pow(radius * scale, 2));
 }
 
 int Particule::getEnergy() const {

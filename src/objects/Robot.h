@@ -39,7 +39,9 @@ public:
 
    bool addAction(double t, int vg, int vd);
 
-   void goToParticule(int speed, Particule* particule);
+   double goToPosition(int speed, Position destination);
+
+   void goToPositionDuration(double time, Position destination);
 };
 
 struct RobotData {

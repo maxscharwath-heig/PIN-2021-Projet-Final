@@ -83,7 +83,7 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 
 void Robot::update(WorldWidget* widget, double deltaTime) {
 
-   goToParticule(100, world->particules.front());
+   //goToPosition(100, world->particules.front()->getPosition());
 
    if (!actions.empty()) {
       auto last = actions.front();
@@ -177,13 +177,42 @@ double Robot::getAlignementWithParticle(Particule* particule) {
    return angle;
 }
 
-void Robot::goToParticule(int speed, Particule* particule) {
+double Robot::goToPosition(int speed, Position destination) {
    double a = orientation * M_PI / 180.0;
-   Position A = position;
-   Position B = particule->getPosition();
    Position d = {cos(a), sin(a)};
-   double R = (sqrt(d.x * d.x + d.y * d.y) * A.getDistance(B)) /
-              (-d.y * (B.x - A.x) + d.x * (B.y - A.y)) * A.getDistance(B) / 2;
+   double distance = position.getDistance(destination);
+   double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
+              (-d.y * (destination.x - position.x) +
+               d.x * (destination.y - position.y));
+
+
    rightSpeed = speed;
    leftSpeed = ((R + radius) / (R - radius) * speed);
+
+   double w = (leftSpeed - rightSpeed) / (2 * radius);
+   double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
+   double newAngle = w * t / M_PI * 180.0;
+   std::cout << "Robot go to " << destination.x << ":" << destination.y
+             << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
+             << std::endl;
+   return t;
+}
+
+void Robot::goToPositionDuration(double time, Position destination) {
+   double a = orientation * M_PI / 180.0;
+   Position d = {cos(a), sin(a)};
+   double distance = position.getDistance(destination);
+   double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
+              (-d.y * (destination.x - position.x) +
+               d.x * (destination.y - position.y));
+
+
+   double w = (2.0 * asin((distance / 2.0) / R)) / time;
+   double vt = w * R;
+   rightSpeed = (2 * vt) / ((R + radius) / (R - radius) + 1);
+   leftSpeed = (2 * vt) - rightSpeed;
+
+   std::cout << "Robot go to " << destination.x << ":" << destination.y
+             << ", leftSpeed " << leftSpeed << " rightSpeed " << rightSpeed
+             << std::endl;
 }

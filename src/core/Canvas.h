@@ -13,9 +13,11 @@ public:
    void draw(Fl_Widget* parent, Scale* scale) const;
 
    int x() const;
+
    int y() const;
 
    int w(double scale) const;
+
    int h(double scale) const;
 
    unsigned TMAXE() const;

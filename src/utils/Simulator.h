@@ -3,11 +3,10 @@
 
 #include "../objects/Robot.h"
 
-class Simulator
-{
+class Simulator {
    Simulator();
 
-   void giveOrder(Robot *);
+   void giveOrder(Robot*);
 
    unsigned getScore();
 

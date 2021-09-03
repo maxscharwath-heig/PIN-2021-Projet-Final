@@ -17,6 +17,7 @@ private:
                                               FL_YELLOW, FL_GREEN, FL_BLUE, 161};
 
    void updateTimeLabel();
+
    std::string timeLabel;
 public:
    WorldWidget(int x, int y, int w, int h);
