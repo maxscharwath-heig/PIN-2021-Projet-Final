@@ -53,6 +53,14 @@ void World::deleteParticule(Particule* particule) {
 void World::addRobot(Robot* robot) {
    robot->setWorld(this);
    robots.push_back(robot);
+
+   //todo list of movement for testing;
+   robot->addAction(0, -9, 49);
+   robot->addAction(1, 10, 49);
+   robot->addAction(2, 20, 20);
+   robot->addAction(4.2, -9, -9);
+   robot->addAction(5.9, 20, 20);
+   robot->addAction(7, 0, 49);
 }
 
 void World::deleteRobot(Robot* robot) {

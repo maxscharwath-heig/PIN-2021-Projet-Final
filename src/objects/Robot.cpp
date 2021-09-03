@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
+#include "../utils/Logger.h"
 
 Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
@@ -12,13 +13,6 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
       orientation(orientation),
       leftSpeed(leftSpeed),
       rightSpeed(rightSpeed) {
-   //todo list of movement for testing;
-   addAction(0, -100, 100);
-   addAction(1, 10, 100);
-   addAction(2, 20, 20);
-   addAction(4.2, -20, -20);
-   addAction(5.9, 20, 20);
-   addAction(7, 0, 200);
 }
 
 void Robot::draw(WorldWidget* widget) const {
@@ -115,9 +109,46 @@ void Robot::stop() {
 }
 
 bool Robot::addAction(double t, int vg, int vd) {
-   if (!actions.empty() && t <= actions.back().time) return false;
-   if (t < 0 || world && t < world->simulationTime)
-      return false;//if we need to add command at runtime;
+   if (!world)return false;
+
+   if (t < 0 || world && t < world->simulationTime) {
+      Logger::Log(LoggerType::WARNING, "Cant send a command in the past");
+      return false;
+   }
+
+   if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
+      Logger::Log(LoggerType::WARNING, "Error vMin");
+      return false;
+   }
+
+   if ((vg + vd) / 2 >= world->constraint.vMax) {
+      Logger::Log(LoggerType::WARNING, "Error vMax");
+      return false;
+   }
+
+
+   if (!actions.empty()) {
+      if (t <= actions.back().time) {
+         Logger::Log(LoggerType::WARNING,
+                     "Need to send a command after the last");
+         return false;
+      }
+
+      if (abs(actions.back().time - t) < world->constraint.dtMin) {
+         Logger::Log(LoggerType::WARNING,
+                     "Need to wait more");
+         return false;
+      }
+
+      if (abs(vg - actions.back().vg) >= world->constraint.dvMax ||
+          abs(vd - actions.back().vd) >= world->constraint.dvMax) {
+         Logger::Log(LoggerType::WARNING,
+                     "Velocity too big");
+         return false;
+      }
+   }
+
+
    actions.push({t, vg, vd});
    return true;
 }

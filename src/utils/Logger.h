@@ -5,8 +5,8 @@
 #include <string>
 #include <ctime>
 
-enum class LoggerType{SCORE, R_VELOCITY, R_COLLISION, P_COLLISION};
-const std::vector<std::string> LOGGER_TYPE_NAMES = {"scores", "vitessesR", "collisionsR", "collisionsP"};
+enum class LoggerType{SCORE, R_VELOCITY, R_COLLISION, P_COLLISION, WARNING};
+const std::vector<std::string> LOGGER_TYPE_NAMES = {"scores", "vitessesR", "collisionsR", "collisionsP", "warning"};
 
 class Logger {
 public:

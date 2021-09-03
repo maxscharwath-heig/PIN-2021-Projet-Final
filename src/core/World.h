@@ -6,6 +6,13 @@
 #include "../objects/Particule.h"
 #include "Canvas.h"
 
+struct Constraint {
+   int vMin;
+   int vMax;
+   int dtMin;
+   int dvMax;
+};
+
 class World {
 private:
    int particleCounter;
@@ -19,6 +26,7 @@ public:
    std::vector<Robot*> robots;
    std::vector<Particule*> particules;
    double simulationTime;
+   Constraint constraint = {10, 50, 1, 50};
 
    void update(WorldWidget* widget, double deltaTime);
 
