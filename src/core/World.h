@@ -21,6 +21,7 @@ private:
 
 public:
    void clear();
+   void ready();
 
    void updateParticules();
 

@@ -38,6 +38,8 @@ public:
    void stop();
 
    bool addAction(double t, int vg, int vd);
+
+   void goToParticule(int speed, Particule* particule);
 };
 
 struct RobotData {

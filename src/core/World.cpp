@@ -55,14 +55,6 @@ void World::deleteParticule(Particule* particule) {
 void World::addRobot(Robot* robot) {
    robot->setWorld(this);
    robots.push_back(robot);
-
-   //todo list of movement for testing;
-   robot->addAction(0, -9, 49);
-   robot->addAction(1, 10, 49);
-   robot->addAction(2, 20, 20);
-   robot->addAction(4.2, -9, -9);
-   robot->addAction(5.9, 20, 20);
-   robot->addAction(7, 0, 49);
 }
 
 void World::deleteRobot(Robot* robot) {
@@ -84,7 +76,7 @@ void World::update(WorldWidget* widget, double deltaTime) {
          if (a == b)continue;
          if (Robot::collision(a, b)) {
             a->robot->collided = true;
-            a->robot->stop();
+            //a->robot->stop();
             break;
          }
       }
@@ -95,12 +87,16 @@ void World::update(WorldWidget* widget, double deltaTime) {
    updateParticules();
 }
 
-int World::getTotalEnergy() const
-{
+int World::getTotalEnergy() const {
    return totalEnergy;
 }
 
-int World::getCleanedEnergy() const
-{
+int World::getCleanedEnergy() const {
    return cleanedEnergy;
+}
+
+void World::ready() {
+   for (const auto& item: robots) {
+      item->goToParticule(100, particules.front());
+   }
 }

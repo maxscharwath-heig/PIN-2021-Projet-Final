@@ -77,6 +77,7 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
    }
    prediction->position.x += dX;
    prediction->position.y += dY;
+
    return prediction;
 }
 
@@ -150,6 +151,14 @@ bool Robot::addAction(double t, int vg, int vd) {
    return true;
 }
 
+/**
+ * rotate(deg, vitesse){
+ *  addAction(0, vitesse, -vitesse);
+ *  double t = deg*PI/180.0/vitesse;
+ *  addAction(0+t, 0,0);
+ * }
+ */
+
 bool Robot::canAspirateParticle(Particule* particule) {
    return abs(getAlignementWithParticle(particule)) <= 1.0 &&
           position.getDistance(particule->getPosition()) <=
@@ -163,4 +172,13 @@ double Robot::getAlignementWithParticle(Particule* particule) {
    else if (angle < -180)
       angle += 360;
    return angle;
+}
+
+void Robot::goToParticule(int speed, Particule* particule) {
+   double M = position.getDistance(particule->getPosition()) / 2.0;
+   double alpha = 90 - orientation - position.getAngle(particule->getPosition());
+   double R = M / cos(alpha / 180 * M_PI);
+   rightSpeed = speed;
+   leftSpeed = (int) ((R + radius) / (R - radius) * speed);
+   std::cout << rightSpeed << " " << leftSpeed << std::endl;
 }

@@ -37,11 +37,11 @@ void WorldWidget::draw() {
    fl_push_clip(x(), y(), w(), h());
    canvas->draw(this, scale);
 
-   for (const auto& item: world->robots) {
+   for (Particule* item: world->particules) {
       item->draw(this);
    }
 
-   for (Particule* item: world->particules) {
+   for (const auto& item: world->robots) {
       item->draw(this);
    }
    fl_pop_clip();
@@ -140,7 +140,7 @@ void WorldWidget::parseFile(const std::string& fileName) {
    }
    file.close();
    size(canvas->w(scale->distance()), canvas->h(scale->distance()));
-
+   world->ready();
    // TODO: Change cycles values
    Fl::add_timeout(refreshCycle, perform, (void*) this);
    Fl::add_timeout(refreshCycle, refreshView, (void*) this);
