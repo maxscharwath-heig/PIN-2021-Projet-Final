@@ -53,11 +53,15 @@ private:
 
    static void updateSpeed(Fl_Widget* widget, void* data);
 
+   static void updateScoreLabel(Fl_Widget* widget, void* data, unsigned newScore);
+
    int getFittedW();
 
    int getFittedH();
 
    double speedCounterValue;
+
+   std::string loadedFilename;
 };
 
 #endif //PIN_2021_SERIE_1_MAINWINDOW_H

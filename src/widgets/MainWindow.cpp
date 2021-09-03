@@ -43,7 +43,7 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
    window->inputFile = new Fl_Input(TOOLBAR_Y, TOOLBAR_Y, INPUT_W, DEFAULT_BTN_H, "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
-   window->inputFile->value("demo_fltk.dat"); // Temporary for testing
+   window->inputFile->value("demo.dat"); // Temporary for testing
 
    window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W, DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
@@ -81,6 +81,7 @@ void MainWindow::erase_dp(Fl_Widget* widget, void* data) {
    toggle_sim_buttons(window, data, false);
    window->worldWidget->world->clear();
    window->scrollbars->hide();
+   window->loadedFilename.clear();
    window->label(DEFAULT_LABEL);
 }
 
@@ -101,18 +102,20 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
 
    try {
       window->worldWidget->parseFile(inputPath);
-      WorldWidget::timeMultiplier = window->speedCounterValue;
    }
    catch (const std::exception& e) {
       window->label(DEFAULT_LABEL);
       std::cerr << e.what() << std::endl;
-
       fl_beep(FL_BEEP_ERROR);
       return;
    }
 
+   WorldWidget::timeMultiplier = window->speedCounterValue;
    window->scrollbars->show();
-   window->label(inputPath.substr(inputPath.find_last_of("/\\") + 1).data());
+
+   window->loadedFilename = inputPath.substr(inputPath.find_last_of("/\\") + 1);
+
+   updateScoreLabel(window, data, 0);
 
    window->resize(window->x(), window->y(), window->getFittedW(), window->getFittedH());
 
@@ -169,6 +172,16 @@ int MainWindow::getFittedW()
       return Fl::w();
    }
    return MIN_WIDTH >= worldWidget->w() ? MIN_WIDTH : worldWidget->w() + MARGIN * w();
+}
+
+void MainWindow::updateScoreLabel(Fl_Widget *widget, void *data, unsigned newScore)
+{
+   auto* window = (MainWindow*) data;
+
+   std::stringstream ss;
+   ss << window->loadedFilename + " - " << std::setfill('0') << std::setw(3) << newScore << "%";
+
+   window->label(ss.str().data());
 }
 
 
