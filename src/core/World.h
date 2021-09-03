@@ -7,10 +7,10 @@
 #include "Canvas.h"
 
 struct Constraint {
-   int vMin;
-   int vMax;
-   int dtMin;
-   int dvMax;
+   int vMin = 0;
+   int vMax = 0;
+   int dtMin = 0;
+   int dvMax = 0;
 };
 
 class World {
@@ -26,7 +26,7 @@ public:
    std::vector<Robot*> robots;
    std::vector<Particule*> particules;
    double simulationTime;
-   Constraint constraint = {10, 50, 1, 50};
+   Constraint constraint;
 
    void update(WorldWidget* widget, double deltaTime);
 

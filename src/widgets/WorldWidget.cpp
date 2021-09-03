@@ -47,8 +47,7 @@ void WorldWidget::draw() {
    fl_pop_clip();
 }
 
-void WorldWidget::refreshView(void *userdata)
-{
+void WorldWidget::refreshView(void* userdata) {
    auto* o = (WorldWidget*) userdata;
    o->updateTimeLabel();
    o->redraw();
@@ -97,6 +96,14 @@ void WorldWidget::parseFile(const std::string& fileName) {
                                 args[6],
                                 args[7],
                                 args.size() == 9 ? colors[args[8]] : FL_WHITE);
+            break;
+         case 2://get constraint
+            if (args.size() != 4) {
+               file.close();
+               throw std::invalid_argument(
+                     "Error: wrong number of arguments for constraints");
+            }
+            world->constraint = {args[0], args[1], args[2], args[3]};
             break;
          default://get objects
             switch (args[0]) {
