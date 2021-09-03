@@ -41,6 +41,8 @@ void World::addParticule(Particule* particule) {
    particule->init(++particleCounter);
    particule->setWorld(this);
    particules.push_back(particule);
+
+   totalEnergy += particule->getEnergy();
 }
 
 void World::deleteParticule(Particule* particule) {
@@ -91,4 +93,14 @@ void World::update(WorldWidget* widget, double deltaTime) {
       item->update(widget, deltaTime);
    }
    updateParticules();
+}
+
+int World::getTotalEnergy() const
+{
+   return totalEnergy;
+}
+
+int World::getCleanedEnergy() const
+{
+   return cleanedEnergy;
 }

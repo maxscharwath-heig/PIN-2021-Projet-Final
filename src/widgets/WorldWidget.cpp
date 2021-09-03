@@ -157,7 +157,8 @@ bool WorldWidget::getPaused() const {
 void WorldWidget::updateTimeLabel() {
    std::ostringstream os;
    os << "Timer: " << std::setprecision(2) << std::fixed
-      << world->simulationTime;
+      << world->simulationTime << " --- Total Energy: " << world->getTotalEnergy()
+      << "-- Cleaned Energy: " << world->getCleanedEnergy();
    timeLabel = os.str();
    parent()->label(timeLabel.c_str());
 }

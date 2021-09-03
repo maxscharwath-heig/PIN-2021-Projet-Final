@@ -150,7 +150,6 @@ void MainWindow::reset_speed(Fl_Widget* widget, void* data) {
    updateSpeed(window, window);
 }
 
-
 void MainWindow::updateSpeed(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
 

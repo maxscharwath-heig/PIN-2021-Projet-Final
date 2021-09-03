@@ -55,7 +55,9 @@ public:
 
    static int getBaseEnergy(int radius, double scale);
 
-   int getRadius();
+   int getRadius() const;
+
+   int getEnergy() const;
 };
 
 

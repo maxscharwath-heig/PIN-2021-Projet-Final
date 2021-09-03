@@ -16,6 +16,9 @@ struct Constraint {
 class World {
 private:
    int particleCounter;
+   int totalEnergy;
+   int cleanedEnergy;
+
 public:
    void clear();
 
@@ -37,6 +40,10 @@ public:
    void addRobot(Robot* robot);
 
    void deleteRobot(Robot* robot);
+
+   int getCleanedEnergy() const;
+
+   int getTotalEnergy() const;
 };
 
 const size_t DECOMPOSE_LEVEL = 4;

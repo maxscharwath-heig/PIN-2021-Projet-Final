@@ -119,7 +119,14 @@ void Particule::init(unsigned id) {
    timeOfDecompose = parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;
 }
 
-int Particule::getBaseEnergy(int radius, double scale)
-{
+int Particule::getBaseEnergy(int radius, double scale) {
    return (int)(M_PI * pow(radius * scale, 2));
+}
+
+int Particule::getEnergy() const {
+   return energy;
+}
+
+int Particule::getRadius() const {
+   return radius;
 }

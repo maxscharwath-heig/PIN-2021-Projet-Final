@@ -10,11 +10,11 @@ class WorldWidget;
 struct Position {
    double x = 0, y = 0;
 
-   double getAngle(Position position) {
+   double getAngle(Position position) const {
       return atan2(position.y - y, position.x - x) * 180 / M_PI;
    }
 
-   double getDistance(Position position) {
+   double getDistance(Position position) const {
       double dx = position.x - x;
       double dy = position.y - y;
       return sqrt(dx * dx + dy * dy);
