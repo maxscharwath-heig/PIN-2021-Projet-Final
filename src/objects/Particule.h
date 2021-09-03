@@ -50,6 +50,8 @@ public:
    void explode();
 
    void init(unsigned id);
+
+   int getRadius();
 };
 
 
