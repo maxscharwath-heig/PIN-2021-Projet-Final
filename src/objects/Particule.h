@@ -54,6 +54,8 @@ public:
    void init(unsigned id);
 
    static int getBaseEnergy(int radius, double scale);
+
+   int getRadius();
 };
 
 

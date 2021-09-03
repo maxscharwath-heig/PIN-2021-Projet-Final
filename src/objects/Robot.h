@@ -4,6 +4,7 @@
 #include <FL/Fl_Widget.H>
 #include "../core/Canvas.h"
 #include "Object.h"
+#include "Particule.h"
 #include <queue>
 
 struct RobotData;
@@ -15,6 +16,10 @@ private:
    double orientation;
    int leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
+
+   double getAlignementWithParticle(Particule* particule);
+
+   bool canAspirateParticle(Particule* particule);
 
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,

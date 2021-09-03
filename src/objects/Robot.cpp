@@ -96,10 +96,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
-   //return if circle a and circle b are colliding
-   double dx = a->position.x - b->position.x;
-   double dy = a->position.y - b->position.y;
-   double distance = sqrt(dx * dx + dy * dy);
+   double distance = a->position.getDistance(b->position);
    return distance <= a->robot->radius + b->robot->radius;
 }
 
@@ -151,4 +148,19 @@ bool Robot::addAction(double t, int vg, int vd) {
 
    actions.push({t, vg, vd});
    return true;
+}
+
+bool Robot::canAspirateParticle(Particule* particule) {
+   return abs(getAlignementWithParticle(particule)) <= 1.0 &&
+          position.getDistance(particule->getPosition()) <=
+          radius + particule->getRadius();
+}
+
+double Robot::getAlignementWithParticle(Particule* particule) {
+   double angle = orientation - particule->getPosition().getAngle(this->position);
+   if (angle > 180)
+      angle -= 360;
+   else if (angle < -180)
+      angle += 360;
+   return angle;
 }
