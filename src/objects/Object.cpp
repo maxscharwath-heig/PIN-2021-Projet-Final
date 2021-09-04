@@ -13,3 +13,11 @@ Position Object::getPosition() {
 Object::Object(Position position) {
    this->position = position;
 }
+
+void Object::init(unsigned int id) {
+   this->id = id;
+}
+
+unsigned int Object::getId() const {
+   return id;
+}

@@ -117,7 +117,7 @@ void Particule::update(WorldWidget* widget, double deltaTime) {
 }
 
 void Particule::init(unsigned id) {
-   this->id = id;
+   Object::init(id);
    timeOfDestroy = parentTime + getLifetimeUntilDeath(id, destroyIndex) * timeScale;
    timeOfDecompose =
          parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;

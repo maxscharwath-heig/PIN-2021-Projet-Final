@@ -26,6 +26,7 @@ class Object {
 protected:
    Position position;
    World* world = nullptr;
+   unsigned int id;
 public:
    explicit Object(Position position);
 
@@ -36,6 +37,10 @@ public:
    Position getPosition();
 
    void setWorld(World* world);
+
+   void init(unsigned id);
+
+   unsigned int getId() const;
 };
 
 

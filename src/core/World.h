@@ -16,6 +16,7 @@ struct Constraint {
 class World {
 private:
    int particleCounter;
+   int robotCounter;
    int totalEnergy;
    int cleanedEnergy;
 

@@ -98,6 +98,14 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    auto prediction = predict(widget, deltaTime);
    position = prediction->position;
    orientation = prediction->orientation;
+
+   for (const auto& item: world->particules) {
+      if (isInContactWithParticle(item)) {
+         stop();
+         rotate(1, orientation + getAlignementWithParticle(item));
+         std::cout << getAlignementWithParticle(item) << std::endl;
+      }
+   }
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
@@ -106,6 +114,7 @@ bool Robot::collision(RobotData* a, RobotData* b) {
 }
 
 void Robot::stop() {
+   if (leftSpeed + rightSpeed == 0)return;
    leftSpeed = 0;
    rightSpeed = 0;
 }
@@ -161,28 +170,26 @@ bool Robot::addAction(double t, double vg, double vd) {
  * }
  */
 
-bool Robot::canAspirateParticle(Particule* particule) {
-   return abs(getAlignementWithParticle(particule)) <= 1.0 &&
-          position.getDistance(particule->getPosition()) <=
+bool Robot::isInContactWithParticle(Particule* particule) {
+   return position.getDistance(particule->getPosition()) <=
           radius + particule->getRadius();
 }
 
+bool Robot::canAspirateParticle(Particule* particule) {
+   return abs(getAlignementWithParticle(particule)) <= 1.0 &&
+          isInContactWithParticle(particule);
+}
+
 double Robot::getAlignementWithParticle(Particule* particule) {
-   double angle = orientation - particule->getPosition().getAngle(this->position);
-   if (angle > 180)
-      angle -= 360;
-   else if (angle < -180)
-      angle += 360;
-   return angle;
+   return norm_angle(position.getAngle(particule->getPosition()) - orientation);
 }
 
 double Robot::goToPosition(int speed, Position destination) {
    double a = to_rad(orientation);
-   Position d = {cos(a), sin(a)};
    double distance = position.getDistance(destination);
-   double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
-              (-d.y * (destination.x - position.x) +
-               d.x * (destination.y - position.y));
+   double R = (distance * distance / 2) /
+              (cos(a) * (destination.y - position.y) -
+               sin(a) * (destination.x - position.x));
 
 
    rightSpeed = speed;
@@ -199,13 +206,12 @@ double Robot::goToPosition(int speed, Position destination) {
 
 void Robot::goToPositionDuration(double time, Position destination) {
    double a = to_rad(orientation);
-   Position d = {cos(a), sin(a)};
    double distance = position.getDistance(destination);
-   double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
-              (-d.y * (destination.x - position.x) +
-               d.x * (destination.y - position.y));
+   double R = (distance * distance / 2) /
+              (cos(a) * (destination.y - position.y) -
+               sin(a) * (destination.x - position.x));
 
-
+   std::cout << "R: " << R << std::endl;
    double w = (2.0 * asin((distance / 2.0) / R)) / time;
    double vt = w * R;
    rightSpeed = (2 * vt) / ((R + radius) / (R - radius) + 1);
@@ -217,11 +223,14 @@ void Robot::goToPositionDuration(double time, Position destination) {
 }
 
 void Robot::rotate(double time, double newOrientation) {
+   double now = world ? world->simulationTime : 0;
    if (newOrientation == orientation)return;
-   double a = to_rad(fmod((newOrientation - orientation) + 180, 360) - 180.0);
+   double a = to_rad(norm_angle(newOrientation - orientation));
    double w = a / time;
    double vg = w * radius;
    std::cout << a << " " << vg << " " << -vg << std::endl;
-   addAction(0, vg, -vg);
-   addAction(time, 0, 0);
+
+   addAction(now, vg, -vg);
+   addAction(now + time, 0, 0);
+
 }

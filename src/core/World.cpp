@@ -6,6 +6,7 @@
 void World::clear() {
    simulationTime = 0;
    particleCounter = 0;
+   robotCounter = 0;
 
    for (const auto& item: robots) {
       delete item;
@@ -53,6 +54,7 @@ void World::deleteParticule(Particule* particule) {
 }
 
 void World::addRobot(Robot* robot) {
+   robot->init(++robotCounter);
    robot->setWorld(this);
    robots.push_back(robot);
 }

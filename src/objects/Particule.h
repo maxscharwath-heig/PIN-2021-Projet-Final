@@ -19,7 +19,6 @@ private:
    double parentTime;
    double timeScale;
    int energy;
-   unsigned id;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
 
