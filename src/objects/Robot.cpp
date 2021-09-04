@@ -99,13 +99,26 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    position = prediction->position;
    orientation = prediction->orientation;
 
+   std::vector<Particule*> toDestroy;
+
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
          stop();
-         rotate(1, orientation + getAlignementWithParticle(item));
-         std::cout << getAlignementWithParticle(item) << std::endl;
+         if(canAspirateParticle(item)){
+            toDestroy.push_back(item);
+         } else{
+            rotate(1, orientation + getAlignementWithParticle(item));
+         }
+         // std::cout << getAlignementWithParticle(item) << std::endl;
+      } else if (!leftSpeed, !rightSpeed){
+         // for testing purpose
+         leftSpeed = 50.;
+         rightSpeed = 50.;
       }
    }
+
+   for(const auto& item : toDestroy)
+      item->explode();
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
@@ -176,7 +189,8 @@ bool Robot::isInContactWithParticle(Particule* particule) {
 }
 
 bool Robot::canAspirateParticle(Particule* particule) {
-   return abs(getAlignementWithParticle(particule)) <= 1.0 &&
+   // TODO: reset to 1 degree
+   return abs(getAlignementWithParticle(particule)) <= 10. &&
           isInContactWithParticle(particule);
 }
 
