@@ -97,6 +97,7 @@ int World::getCleanedEnergy() const {
 
 void World::ready() {
    for (const auto& item: robots) {
-      item->goToPositionDuration(10, particules.front()->getPosition());
+      item->rotate(1, 12);
+      //item->goToPositionDuration(10, particules.front()->getPosition());
    }
 }

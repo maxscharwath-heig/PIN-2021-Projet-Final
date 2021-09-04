@@ -109,46 +109,44 @@ void Robot::stop() {
    rightSpeed = 0;
 }
 
-bool Robot::addAction(double t, int vg, int vd) {
+bool Robot::addAction(double t, double vg, double vd) {
+   bool useConstraint = false;
+
    if (!world)return false;
 
    if (t < 0 || world && t < world->simulationTime) {
       Logger::Log(LoggerType::WARNING, "Cant send a command in the past");
       return false;
    }
-
-   if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
-      Logger::Log(LoggerType::WARNING, "Error vMin");
+   if (!actions.empty() && t <= actions.back().time) {
+      Logger::Log(LoggerType::WARNING,
+                  "Need to send a command after the last");
       return false;
    }
 
-   if ((vg + vd) / 2 >= world->constraint.vMax) {
-      Logger::Log(LoggerType::WARNING, "Error vMax");
-      return false;
-   }
-
-
-   if (!actions.empty()) {
-      if (t <= actions.back().time) {
-         Logger::Log(LoggerType::WARNING,
-                     "Need to send a command after the last");
+   if (useConstraint) {
+      if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
+         Logger::Log(LoggerType::WARNING, "Error vMin");
          return false;
       }
-
-      if (abs(actions.back().time - t) < world->constraint.dtMin) {
+      if ((vg + vd) / 2 >= world->constraint.vMax) {
+         Logger::Log(LoggerType::WARNING, "Error vMax");
+         return false;
+      }
+      if (!actions.empty() &&
+          abs(actions.back().time - t) < world->constraint.dtMin) {
          Logger::Log(LoggerType::WARNING,
                      "Need to wait more");
          return false;
       }
-
-      if (abs(vg - actions.back().vg) >= world->constraint.dvMax ||
+      if (!actions.empty() &&
+          abs(vg - actions.back().vg) >= world->constraint.dvMax ||
           abs(vd - actions.back().vd) >= world->constraint.dvMax) {
          Logger::Log(LoggerType::WARNING,
                      "Velocity too big");
          return false;
       }
    }
-
 
    actions.push({t, vg, vd});
    return true;
@@ -215,4 +213,15 @@ void Robot::goToPositionDuration(double time, Position destination) {
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", leftSpeed " << leftSpeed << " rightSpeed " << rightSpeed
              << std::endl;
+}
+
+void Robot::rotate(double time, double newOrientation) {
+   if (newOrientation == orientation)return;
+   double a =
+         (fmod((newOrientation - orientation) + 180, 360) - 180.0) / 180.0 * M_PI;
+   double w = a / time;
+   double vg = w * radius;
+   std::cout << a << " " << vg << " " << -vg << std::endl;
+   addAction(0, vg, -vg);
+   addAction(time, 0, 0);
 }

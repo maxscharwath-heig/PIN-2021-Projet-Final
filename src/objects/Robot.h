@@ -37,11 +37,12 @@ public:
 
    void stop();
 
-   bool addAction(double t, int vg, int vd);
+   bool addAction(double t, double vg, double vd);
 
    double goToPosition(int speed, Position destination);
 
    void goToPositionDuration(double time, Position destination);
+   void rotate(double time, double orientation);
 };
 
 struct RobotData {
@@ -52,8 +53,8 @@ struct RobotData {
 
 struct RobotAction {
    double time = 0;
-   int vg = 0;
-   int vd = 0;
+   double vg = 0;
+   double vd = 0;
 };
 
 #endif //PIN_2021_SERIE_1_ROBOT_H
