@@ -19,8 +19,8 @@ Logger::Logger(LoggerType loggerType, const std::string& message) : loggerType(
    ss << std::setw(2) << std::setfill('0') << gmTime->tm_hour << ":"
       << std::setw(2) << std::setfill('0') << gmTime->tm_min << ":"
       << std::setw(2) << std::setfill('0') << gmTime->tm_sec << " "
-      << std::setw(2) << std::setfill('0') << 1 + gmTime->tm_mday << "."
-      << std::setw(2) << std::setfill('0') << gmTime->tm_mon << "."
+      << std::setw(2) << std::setfill('0') << gmTime->tm_mday << "."
+      << std::setw(2) << std::setfill('0') << 1 + gmTime->tm_mon << "."
       << 1900 + gmTime->tm_year;
    logFile << ss.str() << " " << message << std::endl;
    std::cout << ss.str() << " " << message << std::endl;
