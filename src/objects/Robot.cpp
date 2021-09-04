@@ -5,6 +5,7 @@
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "../utils/Logger.h"
+#include "../utils/Utils.h"
 
 Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
@@ -26,8 +27,8 @@ void Robot::draw(WorldWidget* widget) const {
              widget->y() + (position.y + offsetY) * scale,
              radius * scale);
    //head
-   int headSize = radius / 4;
-   double a = orientation * M_PI / 180.0;
+   double headSize = radius / 4.0;
+   double a = to_rad(orientation);
    double x1 = position.x + ((radius - headSize * 2) * cos(a));
    double y1 = position.y + ((radius - headSize * 2) * sin(a));
 
@@ -49,7 +50,7 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
          t = deltaTime,
          dX = 0,
          dY = 0,
-         a = prediction->orientation * M_PI / 180.0,
+         a = to_rad(prediction->orientation),
          vg = leftSpeed,
          vd = rightSpeed;
 
@@ -73,7 +74,7 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
       double w = (vg - vd) / (radius * 2.0) * t;
       dX = R * (cos(a) * sin(w) - sin(a) * (1 - cos(w)));
       dY = R * (sin(a) * sin(w) + cos(a) * (1 - cos(w)));
-      prediction->orientation += w * 180.0 / M_PI;
+      prediction->orientation += to_deg(w);
    }
    prediction->position.x += dX;
    prediction->position.y += dY;
@@ -176,7 +177,7 @@ double Robot::getAlignementWithParticle(Particule* particule) {
 }
 
 double Robot::goToPosition(int speed, Position destination) {
-   double a = orientation * M_PI / 180.0;
+   double a = to_rad(orientation);
    Position d = {cos(a), sin(a)};
    double distance = position.getDistance(destination);
    double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
@@ -189,7 +190,7 @@ double Robot::goToPosition(int speed, Position destination) {
 
    double w = (leftSpeed - rightSpeed) / (2 * radius);
    double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
-   double newAngle = w * t / M_PI * 180.0;
+   double newAngle = to_deg(w * t);
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
              << std::endl;
@@ -197,7 +198,7 @@ double Robot::goToPosition(int speed, Position destination) {
 }
 
 void Robot::goToPositionDuration(double time, Position destination) {
-   double a = orientation * M_PI / 180.0;
+   double a = to_rad(orientation);
    Position d = {cos(a), sin(a)};
    double distance = position.getDistance(destination);
    double R = (sqrt(d.x * d.x + d.y * d.y) * distance * distance / 2) /
@@ -217,8 +218,7 @@ void Robot::goToPositionDuration(double time, Position destination) {
 
 void Robot::rotate(double time, double newOrientation) {
    if (newOrientation == orientation)return;
-   double a =
-         (fmod((newOrientation - orientation) + 180, 360) - 180.0) / 180.0 * M_PI;
+   double a = to_rad(fmod((newOrientation - orientation) + 180, 360) - 180.0);
    double w = a / time;
    double vg = w * radius;
    std::cout << a << " " << vg << " " << -vg << std::endl;

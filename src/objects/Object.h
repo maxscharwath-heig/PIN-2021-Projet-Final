@@ -2,6 +2,7 @@
 #define PIN_2021_SERIE_1_OBJECT_H
 
 #include <cmath>
+#include "../utils/Utils.h"
 
 class World;
 
@@ -11,7 +12,7 @@ struct Position {
    double x = 0, y = 0;
 
    double getAngle(Position position) const {
-      return atan2(position.y - y, position.x - x) * 180 / M_PI;
+      return to_deg(atan2(position.y - y, position.x - x));
    }
 
    double getDistance(Position position) const {
