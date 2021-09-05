@@ -47,6 +47,8 @@ public:
    int getCleanedEnergy() const;
 
    int getTotalEnergy() const;
+
+   double getCleanedEnergyRatio() const;
 };
 
 const size_t DECOMPOSE_LEVEL = 4;

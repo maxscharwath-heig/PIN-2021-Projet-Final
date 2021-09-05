@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <FL/Fl.H>
+#include <Fl/fl_ask.H>
 #include <iomanip>
 #include <chrono>
 
@@ -27,6 +28,17 @@ void WorldWidget::perform(void* userdata) {
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
       o->world->update(o, deltaTime);
+
+      std::cout << "Clean ratio = " << o->world->getCleanedEnergy() << " " << o->world->getTotalEnergy() << std::endl;
+
+      if(o->world->particules.empty()){
+         o->setPaused(true);
+         std::stringstream ss;
+         ss << "Parti terminée avec " << std::setprecision(2)
+            << o->world->getCleanedEnergyRatio() * 100. << "% de particules détruites.";
+         fl_alert("%s", ss.str().c_str());
+         // TODO: descativer les boutons go/pause, reset et vitesse
+      }
    }
    Fl::repeat_timeout(refreshCycle, perform, userdata);
 }

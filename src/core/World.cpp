@@ -30,6 +30,7 @@ void World::updateParticules() {
    }
 
    for (const auto& item: particulesToDelete) {
+      cleanedEnergy += item->getEnergy();
       explode(item);
    }
 }
@@ -95,6 +96,10 @@ int World::getTotalEnergy() const {
 
 int World::getCleanedEnergy() const {
    return cleanedEnergy;
+}
+
+double World::getCleanedEnergyRatio() const {
+   return (double) getCleanedEnergy() / (double) getTotalEnergy();
 }
 
 void World::ready() {
