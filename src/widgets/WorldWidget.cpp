@@ -34,10 +34,10 @@ void WorldWidget::perform(void* userdata) {
       if(o->world->particules.empty()){
          o->setPaused(true);
          std::stringstream ss;
-         ss << "Parti terminée avec " << std::setprecision(2)
+         ss << "Partie terminée avec " << std::setprecision(2)
             << o->world->getCleanedEnergyRatio() * 100. << "% de particules détruites.";
          fl_alert("%s", ss.str().c_str());
-         // TODO: descativer les boutons go/pause, reset et vitesse
+         // TODO: descativer les boutons go/pause, reset et vitesse, et activer le inputFile et les boutons ouvrir et effacer
       }
    }
    Fl::repeat_timeout(refreshCycle, perform, userdata);
