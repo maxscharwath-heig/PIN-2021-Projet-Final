@@ -2,6 +2,7 @@
 #include <FL/FL_Draw.H>
 #include <cmath>
 #include <iostream>
+#include <FL/fl_ask.H>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "../utils/Logger.h"
@@ -21,7 +22,7 @@ void Robot::draw(WorldWidget* widget) const {
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
-   fl_color(collided ? FL_GREEN : FL_BLACK);
+   fl_color(isEmergencyStopped ? FL_RED : FL_BLACK);
    //body
    fl_circle(widget->x() + (position.x + offsetX) * scale,
              widget->y() + (position.y + offsetY) * scale,
@@ -85,7 +86,6 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 void Robot::update(WorldWidget* widget, double deltaTime) {
 
    //goToPosition(100, world->particules.front()->getPosition());
-
    if (!actions.empty()) {
       auto last = actions.front();
       if (world->simulationTime >= last.time) {
@@ -128,6 +128,14 @@ void Robot::stop() {
    if (leftSpeed + rightSpeed == 0)return;
    leftSpeed = 0;
    rightSpeed = 0;
+}
+
+void Robot::emergencyStop() {
+   if (!isEmergencyStopped)
+      fl_beep(FL_BEEP_ERROR);
+   isEmergencyStopped = true;
+   leftSpeed = rightSpeed = 0;
+   std::queue<RobotAction>().swap(actions);//clear actions;
 }
 
 bool Robot::addAction(double t, double vg, double vd) {

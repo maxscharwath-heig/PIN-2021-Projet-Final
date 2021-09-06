@@ -37,7 +37,7 @@ public:
 
    static bool collision(RobotData* a, RobotData* b);
 
-   bool collided = false;
+   bool isEmergencyStopped = false;
 
    void stop();
 
@@ -48,6 +48,8 @@ public:
    double goToPositionDuration(double t, Position destination);
 
    void rotate(double time, double orientation);
+
+   void emergencyStop();
 };
 
 struct RobotData {

@@ -72,12 +72,10 @@ void World::update(WorldWidget* widget, double deltaTime) {
    }
 
    for (const auto& a: robotsPredicted) {
-      a->robot->collided = false;
       for (const auto& b: robotsPredicted) {
          if (a == b) continue;
          if (Robot::collision(a, b)) {
-            a->robot->collided = true;
-            //a->robot->stop();
+            a->robot->emergencyStop();
             break;
          }
       }
@@ -97,7 +95,8 @@ int World::getCleanedEnergy() const {
 }
 
 double World::getCleanedEnergyRatio() const {
-   return getTotalEnergy() ? ((double) getCleanedEnergy() / (double) getTotalEnergy()) * 100 : 0;
+   return getTotalEnergy() ?
+          ((double) getCleanedEnergy() / (double) getTotalEnergy()) * 100 : 0;
 }
 
 void World::ready() {
