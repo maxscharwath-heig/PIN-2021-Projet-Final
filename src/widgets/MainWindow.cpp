@@ -183,7 +183,7 @@ int MainWindow::getFittedW() {
                                                       MARGIN * w();
 }
 
-void MainWindow::updateScoreLabel(Fl_Widget* widget, void* data, unsigned newScore) {
+void MainWindow::updateScoreLabel(Fl_Widget* widget, void* data, int newScore) {
    auto* window = (MainWindow*) data;
 
    std::stringstream ss;

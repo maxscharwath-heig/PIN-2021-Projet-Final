@@ -1,5 +1,6 @@
 #include "WorldWidget.h"
 #include "Fl_Center_Scroll.h"
+#include "MainWindow.h"
 #include <FL/fl_draw.H>
 #include <iostream>
 #include <fstream>
@@ -29,14 +30,13 @@ void WorldWidget::perform(void* userdata) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
       o->world->update(o, deltaTime);
 
-      std::cout << "Clean ratio = " << o->world->getCleanedEnergy() << " " << o->world->getTotalEnergy() << std::endl;
-
-      if(o->world->particules.empty()){
+      if (o->world->particules.empty()) {
          o->setPaused(true);
          std::stringstream ss;
          ss << "Partie terminée avec " << std::setprecision(2)
-            << o->world->getCleanedEnergyRatio() * 100. << "% de particules détruites.";
+            << o->world->getCleanedEnergyRatio() << "% de particules détruites.";
          fl_alert("%s", ss.str().c_str());
+         MainWindow::erase_dp(o->parent()->window(), o->parent()->window()); // TODO: Must be working but is not
          // TODO: descativer les boutons go/pause, reset et vitesse, et activer le inputFile et les boutons ouvrir et effacer
       }
    }
@@ -168,10 +168,10 @@ bool WorldWidget::getPaused() const {
 
 void WorldWidget::updateTimeLabel() {
    std::ostringstream os;
-   os << "Timer: " << std::setprecision(2) << std::fixed
-      << world->simulationTime << " --- Total Energy: " << world->getTotalEnergy()
-      << "-- Cleaned Energy: " << world->getCleanedEnergy();
+   os << "Timer: " << std::setprecision(2) << std::fixed << world->simulationTime;
    timeLabel = os.str();
    parent()->label(timeLabel.c_str());
+
+   MainWindow::updateScoreLabel(parent()->window(), parent()->window(),(int) world->getCleanedEnergyRatio());
 }
 

@@ -34,14 +34,16 @@ public:
 
    void resize(int X, int Y, int W, int H) override;
 
+   static void updateScoreLabel(Fl_Widget* widget, void* data, int newScore);
+
+   static void erase_dp(Fl_Widget* widget, void* data);
+
 private:
    static void openFile(Fl_Widget* widget, void* data);
 
    static void registerFileLoadButtons(Fl_Widget* widget, void* data);
 
    static void registerSimulationButtons(Fl_Widget* widget, void* data);
-
-   static void erase_dp(Fl_Widget* widget, void* data);
 
    static void quit_cb(Fl_Widget* widget, void* data);
 
@@ -52,8 +54,6 @@ private:
    static void reset_speed(Fl_Widget* widget, void* data);
 
    static void updateSpeed(Fl_Widget* widget, void* data);
-
-   static void updateScoreLabel(Fl_Widget* widget, void* data, unsigned newScore);
 
    int getFittedW();
 

@@ -97,7 +97,7 @@ int World::getCleanedEnergy() const {
 }
 
 double World::getCleanedEnergyRatio() const {
-   return getTotalEnergy() ? (double) getCleanedEnergy() / (double) getTotalEnergy() : 0;
+   return getTotalEnergy() ? ((double) getCleanedEnergy() / (double) getTotalEnergy()) * 100 : 0;
 }
 
 void World::ready() {
