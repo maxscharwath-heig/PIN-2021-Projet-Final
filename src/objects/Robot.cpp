@@ -6,7 +6,6 @@
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "../utils/Logger.h"
-#include "../utils/Utils.h"
 
 Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
@@ -98,7 +97,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 
    std::vector<Particule*> toDestroy;
 
-   if (!target) {
+   if (dynamic_cast<Particule*>(target)) {
       setEvent(RobotEvent::NO_PARTICULE);
    }
 
@@ -137,8 +136,6 @@ void Robot::emergencyStop() {
 }
 
 bool Robot::addAction(double t, double vg, double vd) {
-   bool useConstraint = false;
-
    if (!world) return false;
 
    if (t < 0 || (world && t < world->simulationTime)) {
@@ -151,24 +148,23 @@ bool Robot::addAction(double t, double vg, double vd) {
       return false;
    }
 
-   if (useConstraint) {
-      if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
-         Logger::Log(LoggerType::WARNING, "Error vMin");
-         return false;
-      }
-      if ((vg + vd) / 2 >= world->constraint.vMax) {
-         Logger::Log(LoggerType::WARNING, "Error vMax");
-         return false;
-      }
-      if (!actions.empty() &&
-          abs(actions.back().time - t) < world->constraint.dtMin) {
+   if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
+      Logger::Log(LoggerType::WARNING, "Error vMin");
+      return false;
+   }
+   if ((vg + vd) / 2 >= world->constraint.vMax) {
+      Logger::Log(LoggerType::WARNING, "Error vMax");
+      return false;
+   }
+   if (!actions.empty()) {
+      auto last = actions.back();
+      if (abs(last.time - t) < world->constraint.dtMin) {
          Logger::Log(LoggerType::WARNING,
                      "Need to wait more");
          return false;
       }
-      if (!actions.empty() &&
-          abs(vg - actions.back().vg) >= world->constraint.dvMax ||
-          abs(vd - actions.back().vd) >= world->constraint.dvMax) {
+      if (abs(vg - last.vg) >= world->constraint.dvMax ||
+          abs(vd - last.vd) >= world->constraint.dvMax) {
          Logger::Log(LoggerType::WARNING,
                      "Velocity too big");
          return false;
@@ -289,7 +285,10 @@ RobotEvent Robot::getEvent() {
 }
 
 void Robot::setEvent(RobotEvent newEvent) {
-   if (newEvent != RobotEvent::UNKNOWN || newEvent < event) return;
+   if (event == newEvent ||
+       newEvent != RobotEvent::UNKNOWN && newEvent < event)
+      return;
+   std::cout << "[" << getId() << "]" << int(newEvent) << std::endl;
    event = newEvent;
 }
 
@@ -301,5 +300,5 @@ void Robot::aspirate(Particule* particule) {
 }
 
 void Robot::resetEvent() {
-   event = RobotEvent::UNKNOWN;
+   setEvent(RobotEvent::UNKNOWN);
 }

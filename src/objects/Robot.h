@@ -22,7 +22,7 @@ private:
    double orientation;
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
-   RobotEvent event;
+   RobotEvent event = RobotEvent::UNKNOWN;
    Particule* target;
 
    double getAlignementWithParticle(Particule* particule);
@@ -62,6 +62,7 @@ public:
    void emergencyStop();
 
    RobotEvent getEvent();
+
    void resetEvent();
 
    void aspirate(Particule* particule);

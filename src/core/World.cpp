@@ -99,12 +99,9 @@ double World::getCleanedEnergyRatio() const {
 }
 
 void World::ready() {
-   for (const auto& item: robots) {
-      item->goToPositionDuration(10, particules.front()->getPosition());
-   }
 }
 
 void World::addCleanedEnergy(int energy) {
-   if(energy > 0)
+   if (energy > 0)
       cleanedEnergy += energy;
 }

@@ -14,6 +14,7 @@ double WorldWidget::timeMultiplier = 1.;
 
 WorldWidget::WorldWidget(int x, int y, int w, int h) : Fl_Widget(x, y, w, h, "") {
    world = new World();
+   coordinator = new Coordinator(world);
    canvas = nullptr;
    scale = nullptr;
    this->lastTickTime = std::chrono::high_resolution_clock::now();
@@ -28,6 +29,7 @@ void WorldWidget::perform(void* userdata) {
 
    if (!o->simulationPaused) {
       double deltaTime = refreshCycle * timeMultiplier * timeCorrector;
+      o->coordinator->update();
       o->world->update(o, deltaTime);
 
       if (o->world->particules.empty()) {
@@ -172,7 +174,8 @@ void WorldWidget::updateTimeLabel() {
    parent()->label(timeLabel.c_str());
 
    if (!getPaused()) {
-      MainWindow::updateScoreLabel(parent()->window(), parent()->window(),(int) world->getCleanedEnergyRatio());
+      MainWindow::updateScoreLabel(parent()->window(), parent()->window(),
+                                   (int) world->getCleanedEnergyRatio());
    }
 }
 
