@@ -91,6 +91,7 @@ void MainWindow::erase_dp(Fl_Widget* widget, void* data) {
    window->worldWidget->world->clear();
    window->scrollbars->hide();
    window->loadedFilename.clear();
+   window->fileLoadGroup->activate();
    window->label(DEFAULT_LABEL);
 }
 

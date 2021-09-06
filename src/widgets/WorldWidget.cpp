@@ -36,8 +36,7 @@ void WorldWidget::perform(void* userdata) {
          ss << "Partie terminée avec " << std::setprecision(2)
             << o->world->getCleanedEnergyRatio() << "% de particules détruites.";
          fl_alert("%s", ss.str().c_str());
-         MainWindow::erase_dp(o->parent()->window(), o->parent()->window()); // TODO: Must be working but is not
-         // TODO: descativer les boutons go/pause, reset et vitesse, et activer le inputFile et les boutons ouvrir et effacer
+         MainWindow::erase_dp(o->parent()->window(), o->parent()->window());
       }
    }
    Fl::repeat_timeout(refreshCycle, perform, userdata);
@@ -172,6 +171,8 @@ void WorldWidget::updateTimeLabel() {
    timeLabel = os.str();
    parent()->label(timeLabel.c_str());
 
-   MainWindow::updateScoreLabel(parent()->window(), parent()->window(),(int) world->getCleanedEnergyRatio());
+   if (!getPaused()) {
+      MainWindow::updateScoreLabel(parent()->window(), parent()->window(),(int) world->getCleanedEnergyRatio());
+   }
 }
 
