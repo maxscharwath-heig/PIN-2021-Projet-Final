@@ -5,10 +5,10 @@ Scale::Scale(unsigned int xWorld, unsigned int nPixels, unsigned tWorld,
                                   nPixels(nPixels), tWorld(tWorld),
                                   nRefresh(nRefresh) {}
 
-double Scale::time() const {
-   return double(tWorld) / double(nRefresh);
+double Scale::time() const noexcept{
+   return nRefresh ? double(tWorld) / double(nRefresh) : 0;
 }
 
-double Scale::distance() const {
-   return double(nPixels) / double(xWorld);
+double Scale::distance() const noexcept{
+   return xWorld ? double(nPixels) / double(xWorld) : 0;
 }

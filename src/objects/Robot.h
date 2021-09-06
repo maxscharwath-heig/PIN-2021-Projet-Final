@@ -9,7 +9,7 @@
 
 struct RobotData;
 struct RobotAction;
-enum class RobotEvent {//priority LOW -> HIGH
+enum class RobotEvent { // priority LOW -> HIGH
    UNKNOWN = 0,
    PARTICULE_CONTACT,
    NO_PARTICULE,
@@ -25,11 +25,11 @@ private:
    RobotEvent event = RobotEvent::UNKNOWN;
    Particule* target;
 
-   double getAlignementWithParticle(Particule* particule);
+   double getAlignementWithParticle(Particule* particule) const;
 
-   bool canAspirateParticle(Particule* particule);
+   bool canAspirateParticle(Particule* particule) const;
 
-   bool isInContactWithParticle(Particule* particule);
+   bool isInContactWithParticle(Particule* particule) const;
 
    void limitWheelConstraint(double& vg, double& vd);
 
@@ -49,7 +49,7 @@ public:
 
    bool isEmergencyStopped = false;
 
-   void stop();
+   void stop() noexcept;
 
    bool addAction(double t, double vg, double vd);
 
@@ -61,17 +61,19 @@ public:
 
    void emergencyStop();
 
-   int getRadius() const override;
+   int getRadius() const noexcept override;
 
-   RobotEvent getEvent();
+   RobotEvent getEvent() const noexcept;
 
    void resetEvent();
 
    void aspirate(Particule* particule);
 
    void setTarget(Particule* target);
-   Particule* getTarget();
-   bool hasTarget();
+
+   Particule* getTarget() const noexcept;
+
+   bool hasTarget() const noexcept;
 
    friend bool operator <(const Robot& a, const Robot& b);
 };

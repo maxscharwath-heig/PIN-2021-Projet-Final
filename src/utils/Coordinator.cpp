@@ -1,7 +1,11 @@
 #include <iostream>
 #include "Coordinator.h"
 
-Coordinator::Coordinator(World* world) : world(world) {
+Coordinator::Coordinator(World* world) : world(world) { }
+
+Coordinator::~Coordinator()
+{
+   world = nullptr;
 }
 
 Particule* Coordinator::closestParticle(Robot* robot) {

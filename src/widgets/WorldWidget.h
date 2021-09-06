@@ -26,9 +26,9 @@ public:
 
    void parseFile(const std::string& fileName);
 
-   void setPaused(bool paused);
+   void setPaused(bool paused) noexcept;
 
-   bool getPaused() const;
+   bool getPaused() const noexcept;
 
    World* world;
 

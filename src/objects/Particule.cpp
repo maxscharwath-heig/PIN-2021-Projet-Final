@@ -84,7 +84,7 @@ std::vector<Particule*> Particule::createChilds() const {
    return children;
 }
 
-unsigned Particule::getDecomposeLevel() const {
+unsigned Particule::getDecomposeLevel() const noexcept {
    return decomposeLevel;
 }
 
@@ -104,18 +104,15 @@ unsigned Particule::getLifetimeUntilDeath(unsigned n, unsigned index) const {
    return (getLifetimeUntilDeath(n - 1, index) * index) % tmaxe;
 }
 
-double Particule::getDecomposeTime() const {
+double Particule::getDecomposeTime() const noexcept {
    return timeOfDecompose;
 }
 
-double Particule::getDestroyTime() const {
+double Particule::getDestroyTime() const noexcept {
    return timeOfDestroy;
 }
 
-void Particule::update(WorldWidget* widget, double deltaTime) {
-   // TODO: Call explode from here ?
-
-}
+void Particule::update(WorldWidget* widget, double deltaTime) { }
 
 void Particule::init(unsigned id) {
    Object::init(id);
@@ -124,14 +121,14 @@ void Particule::init(unsigned id) {
          parentTime + getLifetimeUntilDeath(id, decomposeIndex) * timeScale;
 }
 
-int Particule::getBaseEnergy(int radius, double scale) {
+int Particule::getBaseEnergy(int radius, double scale) noexcept {
    return (int) (M_PI * pow(radius * scale, 2));
 }
 
-int Particule::getEnergy() const {
+int Particule::getEnergy() const noexcept {
    return energy;
 }
 
-int Particule::getRadius() const {
+int Particule::getRadius() const noexcept {
    return radius;
 }

@@ -36,7 +36,7 @@ public:
          unsigned decomposeLevel = 1
    );
 
-   unsigned getDecomposeLevel() const;
+   unsigned getDecomposeLevel() const noexcept;
 
    std::vector<Particule*> createChilds() const;
 
@@ -44,19 +44,19 @@ public:
 
    void draw(WorldWidget* widget) const override;
 
-   double getDecomposeTime() const;
+   double getDecomposeTime() const noexcept;
 
-   double getDestroyTime() const;
+   double getDestroyTime() const noexcept;
 
    void explode();
 
    void init(unsigned id);
 
-   static int getBaseEnergy(int radius, double scale);
+   static int getBaseEnergy(int radius, double scale) noexcept;
 
-   int getRadius() const override;
+   int getRadius() const noexcept override;
 
-   int getEnergy() const;
+   int getEnergy() const noexcept;
 };
 
 

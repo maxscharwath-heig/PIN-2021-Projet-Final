@@ -42,15 +42,17 @@ public:
 
    void deleteRobot(Robot* robot);
 
-   int getCleanedEnergy() const;
+   int getCleanedEnergy() const noexcept;
 
-   int getTotalEnergy() const;
+   int getTotalEnergy() const noexcept;
 
-   double getCleanedEnergyRatio() const;
+   double getCleanedEnergyRatio() const noexcept;
 
    std::vector<Object*> getAllObjects() const;
 
-   void addCleanedEnergy(int energy);
+   void addCleanedEnergy(int energy) noexcept;
+
+   ~World();
 };
 
 const size_t DECOMPOSE_LEVEL = 4;

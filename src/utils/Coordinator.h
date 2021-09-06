@@ -11,7 +11,8 @@ private:
    Particule* closestParticle(Robot* robot);
 
 public:
-   Coordinator(World* world);
+   explicit Coordinator(World* world);
+   ~Coordinator();
 
    void update();
 };

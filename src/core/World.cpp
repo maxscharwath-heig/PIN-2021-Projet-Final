@@ -85,21 +85,20 @@ void World::update(WorldWidget* widget, double deltaTime) {
    updateParticules();
 }
 
-int World::getTotalEnergy() const {
+int World::getTotalEnergy() const noexcept{
    return totalEnergy;
 }
 
-int World::getCleanedEnergy() const {
+int World::getCleanedEnergy() const noexcept{
    return cleanedEnergy;
 }
 
-double World::getCleanedEnergyRatio() const {
+double World::getCleanedEnergyRatio() const noexcept{
    return getTotalEnergy() ?
           ((double) getCleanedEnergy() / (double) getTotalEnergy()) * 100 : 0;
 }
 
-void World::ready() {
-}
+void World::ready() {}
 
 std::vector<Object *> World::getAllObjects() const
 {
@@ -111,7 +110,12 @@ std::vector<Object *> World::getAllObjects() const
    return objects;
 }
 
-void World::addCleanedEnergy(int energy) {
+void World::addCleanedEnergy(int energy) noexcept{
    if (energy > 0)
       cleanedEnergy += energy;
+}
+
+World::~World()
+{
+   clear();
 }

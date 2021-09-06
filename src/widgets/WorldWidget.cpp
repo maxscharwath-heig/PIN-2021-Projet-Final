@@ -174,11 +174,11 @@ void WorldWidget::parseFile(const std::string& fileName) {
    Fl::add_timeout(refreshCycle, refreshView, (void*) this);
 }
 
-void WorldWidget::setPaused(bool paused) {
+void WorldWidget::setPaused(bool paused) noexcept{
    simulationPaused = paused;
 }
 
-bool WorldWidget::getPaused() const {
+bool WorldWidget::getPaused() const noexcept{
    return simulationPaused;
 }
 

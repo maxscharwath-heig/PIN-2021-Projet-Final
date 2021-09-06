@@ -13,10 +13,8 @@ public:
    static bool robotsSizesValids(const std::vector<Robot*>& robots);
    static bool robotsAndParticulesSizesValids(const std::vector<Robot*>& robots, const std::vector<Particule*>& particules);
 
-
 private:
    static bool areOverlapping(Object *a, Object *b);
-
 };
 
 

@@ -12,15 +12,15 @@ public:
 
    void draw(Fl_Widget* parent, Scale* scale) const;
 
-   int x() const;
+   int x() const noexcept;
 
-   int y() const;
+   int y() const noexcept;
 
-   int w(double scale) const;
+   int w(double scale) const noexcept;
 
-   int h(double scale) const;
+   int h(double scale) const noexcept;
 
-   unsigned TMAXE() const;
+   unsigned TMAXE() const noexcept;
 
 private:
    int xMin;

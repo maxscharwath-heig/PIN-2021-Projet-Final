@@ -9,11 +9,11 @@ private:
    int prevW = 0;
    int prevH = 0;
 
-   int centerX(Fl_Widget* wid) {
+   int centerX(Fl_Widget* wid) const {
       return x() + (w() - wid->w()) / 2;
    }
 
-   int centerY(Fl_Widget* wid) {
+   int centerY(Fl_Widget* wid) const {
       return y() + (h() - wid->h()) / 2;
    }
 

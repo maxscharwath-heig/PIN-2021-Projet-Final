@@ -13,8 +13,8 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
       radius(radius),
       orientation(orientation),
       leftSpeed(leftSpeed),
-      rightSpeed(rightSpeed) {
-}
+      rightSpeed(rightSpeed),
+      target(nullptr) {}
 
 void Robot::draw(WorldWidget* widget) const {
    double scale = widget->scale->distance();
@@ -120,8 +120,8 @@ bool Robot::collision(RobotData* a, RobotData* b) {
    return distance <= a->robot->radius + b->robot->radius;
 }
 
-void Robot::stop() {
-   if (leftSpeed + rightSpeed == 0)return;
+void Robot::stop() noexcept{
+   if (leftSpeed + rightSpeed == 0) return;
    leftSpeed = 0;
    rightSpeed = 0;
 }
@@ -129,10 +129,11 @@ void Robot::stop() {
 void Robot::emergencyStop() {
    if (!isEmergencyStopped)
       fl_beep(FL_BEEP_ERROR);
+
    setEvent(RobotEvent::COLLISION_WARNING);
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
-   std::queue<RobotAction>().swap(actions);//clear actions;
+   std::queue<RobotAction>().swap(actions); // clear actions;
 }
 
 bool Robot::addAction(double t, double vg, double vd) {
@@ -183,17 +184,17 @@ bool Robot::addAction(double t, double vg, double vd) {
  * }
  */
 
-bool Robot::isInContactWithParticle(Particule* particule) {
+bool Robot::isInContactWithParticle(Particule* particule) const {
    return position.getDistance(particule->getPosition()) <=
           radius + particule->getRadius();
 }
 
-bool Robot::canAspirateParticle(Particule* particule) {
+bool Robot::canAspirateParticle(Particule* particule) const {
    return abs(getAlignementWithParticle(particule)) <= 1. &&
           isInContactWithParticle(particule);
 }
 
-double Robot::getAlignementWithParticle(Particule* particule) {
+double Robot::getAlignementWithParticle(Particule* particule) const {
    return norm_angle(position.getAngle(particule->getPosition()) - orientation);
 }
 
@@ -280,13 +281,13 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
    }
 }
 
-RobotEvent Robot::getEvent() {
+RobotEvent Robot::getEvent() const noexcept {
    return event;
 }
 
 void Robot::setEvent(RobotEvent newEvent) {
    if (event == newEvent ||
-       newEvent != RobotEvent::UNKNOWN && newEvent < event)
+       (newEvent != RobotEvent::UNKNOWN && newEvent < event))
       return;
    std::cout << "[Event Robot#" << getId() << "] " << int(event) << " => "
              << int(newEvent)
@@ -305,7 +306,7 @@ void Robot::resetEvent() {
    setEvent(RobotEvent::UNKNOWN);
 }
 
-int Robot::getRadius() const {
+int Robot::getRadius() const noexcept {
    return radius;
 }
 
@@ -318,11 +319,11 @@ void Robot::setTarget(Particule* target) {
    this->target = target;
 }
 
-Particule* Robot::getTarget() {
+Particule* Robot::getTarget() const noexcept {
    return target;
 }
 
-bool Robot::hasTarget() {
+bool Robot::hasTarget() const noexcept {
    return target;
 }
 

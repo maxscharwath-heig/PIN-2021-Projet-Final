@@ -34,15 +34,15 @@ public:
 
    virtual void update(WorldWidget* widget, double deltaTime) = 0;
 
-   Position getPosition();
+   Position getPosition() const noexcept;
 
    void setWorld(World* world);
 
    void init(unsigned id);
 
-   unsigned int getId() const;
+   unsigned int getId() const noexcept;
 
-   virtual int getRadius() const = 0;
+   virtual int getRadius() const noexcept = 0;
 };
 
 

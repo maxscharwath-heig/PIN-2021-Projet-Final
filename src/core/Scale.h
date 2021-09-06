@@ -5,9 +5,9 @@ class Scale {
 public:
    Scale(unsigned xWorld, unsigned nPixels, unsigned tWorld, unsigned nRefresh);
 
-   double time() const;
+   double time() const noexcept;
 
-   double distance() const;
+   double distance() const noexcept;
 
 private:
    unsigned xWorld;
