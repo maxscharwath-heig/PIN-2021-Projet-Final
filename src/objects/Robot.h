@@ -68,6 +68,10 @@ public:
    void resetEvent();
 
    void aspirate(Particule* particule);
+
+   void setTarget(Particule* target);
+   Particule* getTarget();
+   bool hasTarget();
 };
 
 struct RobotData {

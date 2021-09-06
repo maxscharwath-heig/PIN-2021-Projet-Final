@@ -7,6 +7,9 @@
 class Coordinator {
 private:
    World* world;
+
+   Particule* closestParticle(Robot* robot);
+
 public:
    Coordinator(World* world);
 
