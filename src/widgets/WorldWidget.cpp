@@ -146,7 +146,7 @@ void WorldWidget::parseFile(const std::string& fileName) {
                }
                   break;
                default:
-                  std::cout << "Oops this object id doesnt exist" << std::endl;
+                  std::cerr << "Oops this object id doesnt exist" << std::endl;
             }
             break;
       }
@@ -169,7 +169,6 @@ void WorldWidget::parseFile(const std::string& fileName) {
    }
 
    world->ready();
-   // TODO: Change cycles values
    Fl::add_timeout(refreshCycle, perform, (void*) this);
    Fl::add_timeout(refreshCycle, refreshView, (void*) this);
 }

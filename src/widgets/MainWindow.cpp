@@ -87,6 +87,7 @@ void MainWindow::registerSimulationButtons(Fl_Widget* widget, void* data) {
 void MainWindow::erase_dp(Fl_Widget* widget, void* data) {
    auto* window = (MainWindow*) data;
    toggle_sim_buttons(window, data, false);
+   window->worldWidget->setPaused(true);
    window->worldWidget->world->clear();
    window->scrollbars->hide();
    window->loadedFilename.clear();

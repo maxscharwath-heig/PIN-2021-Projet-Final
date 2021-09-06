@@ -90,6 +90,8 @@ public:
 
    void clearAction();
 
+   double getOrientation() const noexcept;
+
    Particule* target;
    double orientation;
 };

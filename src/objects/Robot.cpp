@@ -13,17 +13,16 @@ Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
       Object(position),
       radius(radius),
-      orientation(orientation),
       leftSpeed(leftSpeed),
       rightSpeed(rightSpeed),
-      target(nullptr) {}
+      target(nullptr),
+      orientation(orientation) {}
 
 void Robot::draw(WorldWidget* widget) const {
    double scale = widget->scale->distance();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
-   fl_color(isEmergencyStopped ? FL_RED : FL_BLACK);
    //body
    fl_circle(widget->x() + (offsetX - position.x) * scale,
              widget->y() + (offsetY - position.y) * scale,
@@ -137,13 +136,12 @@ void Robot::stop() noexcept {
 
 void Robot::emergencyStop() {
    if (!isEmergencyStopped) {
-      fl_beep(FL_BEEP_ERROR);
       this->clearAction();
       isEmergencyStopped = true;
       leftSpeed = rightSpeed = 0;
    }
    setEvent(RobotEventState::COLLISION_WARNING);
-   speedLog(); // clear actions;
+   speedLog();
 }
 
 bool Robot::addAction(double t, double vg, double vd) {
@@ -308,11 +306,12 @@ void Robot::aspirate(Particule* particule) {
    if (!particule) return;
 
    world->addCleanedEnergy(particule->getEnergy());
+   world->deleteParticule(particule);
+
    std::stringstream ss;
    ss << world->simulationTime << " décontamination "
       << int(world->getCleanedEnergyRatio());
    Logger::Log(LoggerType::SCORE, ss.str());
-   world->deleteParticule(particule);
 }
 
 void Robot::resetEvent() {
@@ -370,5 +369,10 @@ void Robot::speedLog() const {
 
 void Robot::clearAction() {
    std::queue<RobotAction>().swap(actions);
+}
+
+double Robot::getOrientation() const noexcept
+{
+   return orientation;
 }
 

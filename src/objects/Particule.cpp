@@ -43,15 +43,7 @@ void Particule::draw(WorldWidget* widget) const {
    int posY = (int) (widget->y() + (offsetY - position.y - radius) * scale);
    int size = (int) (radius * 2.0 * scale);
 
-   for (const auto& item: targeter) {
-      if (item->hasTarget() && item->getTarget() == this) {
-         fl_color(FL_GREEN);
-         break;
-      }
-   }
-
    fl_pie(posX, posY, size, size, 0, 360);
-
 }
 
 std::vector<Particule*> Particule::createChilds() const {

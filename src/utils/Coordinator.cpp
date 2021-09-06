@@ -38,19 +38,22 @@ void Coordinator::update() {
             auto target = closestParticle(robot);
             robot->setTarget(target);
 
-            //robot->goToPosition(100, target->getPosition());
+            auto tuple = robot->goToPositionDuration(1, target->getPosition());
 
-            // auto tuple = robot->goToPositionDuration(10, target->getPosition());//0gauche 1droite 2temps pour y arriver
-            robot->goToPosition(30, target->getPosition());
+            robot->goToPosition(std::get<1>(tuple), target->getPosition());
 
-            // robot->addAction(world->simulationTime, std::get<0>(tuple), std::get<1>(tuple));
+            //a //0gauche 1droite 2temps pour y arriver
+
+            //robot->goToPosition(std::get<1>(tuple), target->getPosition());
+
+            robot->addAction(world->simulationTime, std::get<0>(tuple), std::get<1>(tuple));
             robot->resetEvent();
             break;
          }
 
          case RobotEventState::COLLISION_WARNING:
             // rotate or change direction
-            robot->rotate(2, robot->orientation + 90);
+            robot->rotate(1, robot->getOrientation() + 90);
             robot->resetEvent();
             break;
          default:
