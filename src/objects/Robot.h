@@ -9,11 +9,16 @@
 
 struct RobotData;
 struct RobotAction;
-enum class RobotEvent { // priority LOW -> HIGH
+enum class RobotEventState { // priority LOW -> HIGH
    UNKNOWN = 0,
    PARTICULE_CONTACT,
    NO_PARTICULE,
    COLLISION_WARNING,
+};
+
+struct RobotEvent {
+   RobotEventState event = RobotEventState::UNKNOWN;
+   void* data = nullptr;
 };
 
 class Robot : public Object {
@@ -22,7 +27,7 @@ private:
    double orientation;
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
-   RobotEvent event = RobotEvent::UNKNOWN;
+   RobotEvent event;
    Particule* target;
 
    double getAlignementWithParticle(Particule* particule) const;
@@ -33,7 +38,7 @@ private:
 
    void limitWheelConstraint(double& vg, double& vd);
 
-   void setEvent(RobotEvent newEvent);
+   void setEvent(RobotEventState newEvent, void* data = 0);
 
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,

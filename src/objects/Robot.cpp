@@ -98,12 +98,12 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    std::vector<Particule*> toDestroy;
 
    if (!hasTarget()) {
-      setEvent(RobotEvent::NO_PARTICULE);
+      setEvent(RobotEventState::NO_PARTICULE);
    }
 
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
-         setEvent(RobotEvent::PARTICULE_CONTACT);
+         setEvent(RobotEventState::PARTICULE_CONTACT, item);
       }
       if (canAspirateParticle(
             item)) {//TODO: Dont know if a non-targeted particule can be aspirate...
@@ -130,7 +130,7 @@ void Robot::emergencyStop() {
    if (!isEmergencyStopped)
       fl_beep(FL_BEEP_ERROR);
 
-   setEvent(RobotEvent::COLLISION_WARNING);
+   setEvent(RobotEventState::COLLISION_WARNING);
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
    std::queue<RobotAction>().swap(actions); // clear actions;
@@ -285,14 +285,15 @@ RobotEvent Robot::getEvent() const noexcept {
    return event;
 }
 
-void Robot::setEvent(RobotEvent newEvent) {
-   if (event == newEvent ||
-       (newEvent != RobotEvent::UNKNOWN && newEvent < event))
+void Robot::setEvent(RobotEventState newEvent, void* data) {
+   if (event.event == newEvent ||
+       (newEvent != RobotEventState::UNKNOWN && newEvent < event.event))
       return;
-   std::cout << "[Event Robot#" << getId() << "] " << int(event) << " => "
+   std::cout << "[Event Robot#" << getId() << "] " << int(event.event) << " => "
              << int(newEvent)
              << std::endl;
-   event = newEvent;
+   event.event = newEvent;
+   event.data = data;
 }
 
 void Robot::aspirate(Particule* particule) {
@@ -303,7 +304,7 @@ void Robot::aspirate(Particule* particule) {
 }
 
 void Robot::resetEvent() {
-   setEvent(RobotEvent::UNKNOWN);
+   setEvent(RobotEventState::UNKNOWN);
 }
 
 int Robot::getRadius() const noexcept {

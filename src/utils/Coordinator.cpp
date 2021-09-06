@@ -22,22 +22,27 @@ Particule* Coordinator::closestParticle(Robot* robot) {
 
 void Coordinator::update() {
    for (const auto& robot: world->robots) {
-      switch (robot->getEvent()) {
-         case RobotEvent::PARTICULE_CONTACT:
-            //need to orientate to right direction (check if is targeted ?)
-            robot->resetEvent();
+      switch (robot->getEvent().event) {
+         case RobotEventState::PARTICULE_CONTACT: {
+            Particule* contact = (Particule*) robot->getEvent().data;
+            if (robot->getTarget() == contact) {
+               std::cout << "Contact with target" << std::endl;
+            } else {
+               robot->resetEvent();
+            }
+         }
             break;
-         case RobotEvent::NO_PARTICULE:
+         case RobotEventState::NO_PARTICULE:
             robot->setTarget(closestParticle(robot));
             robot->goToPositionDuration(10, robot->getTarget()->getPosition());
             robot->resetEvent();
             break;
-         case RobotEvent::COLLISION_WARNING:
+         case RobotEventState::COLLISION_WARNING:
             //rotate or change direction
             //robot->resetEvent();
             break;
          default:
-         case RobotEvent::UNKNOWN:
+         case RobotEventState::UNKNOWN:
             break;
       }
    }
