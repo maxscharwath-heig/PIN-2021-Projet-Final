@@ -160,6 +160,14 @@ void WorldWidget::parseFile(const std::string& fileName) {
       throw std::invalid_argument("Overlapping objects");
    }
 
+   if (!Validator::robotsSizesValids(world->robots)) {
+      throw std::invalid_argument("Incompatible robots sizes");
+   }
+
+   if (!Validator::robotsAndParticulesSizesValids(world->robots, world->particules)) {
+      throw std::invalid_argument("Incompatible robots / particules sizes");
+   }
+
    world->ready();
    // TODO: Change cycles values
    Fl::add_timeout(refreshCycle, perform, (void*) this);

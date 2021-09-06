@@ -310,4 +310,9 @@ int Robot::getRadius() const
    return radius;
 }
 
+bool operator<(const Robot& a, const Robot& b)
+{
+   return a.getRadius() < b.getRadius();
+}
+
 

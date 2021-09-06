@@ -10,7 +10,8 @@ class Validator
 {
 public:
    static bool itemsOverlapping(const std::vector<Object*>& objects);
-   static bool robotsSizes(const std::vector<Robot*>& robots);
+   static bool robotsSizesValids(const std::vector<Robot*>& robots);
+   static bool robotsAndParticulesSizesValids(const std::vector<Robot*>& robots, const std::vector<Particule*>& particules);
 
 
 private:

@@ -68,6 +68,8 @@ public:
    void resetEvent();
 
    void aspirate(Particule* particule);
+
+   friend bool operator <(const Robot& a, const Robot& b);
 };
 
 struct RobotData {

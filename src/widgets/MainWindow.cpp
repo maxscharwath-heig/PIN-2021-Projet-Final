@@ -114,7 +114,7 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
       window->worldWidget->parseFile(inputPath);
    }
    catch (const std::exception& e) {
-      window->label(DEFAULT_LABEL);
+      erase_dp(window, window);
       std::cerr << e.what() << std::endl;
       fl_beep(FL_BEEP_ERROR);
       return;
