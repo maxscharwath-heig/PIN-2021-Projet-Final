@@ -99,6 +99,8 @@ int World::getCleanedEnergy() const {
 }
 
 double World::getCleanedEnergyRatio() const {
+   if(!getTotalEnergy())
+      return 0;
    return (double) getCleanedEnergy() / (double) getTotalEnergy();
 }
 
