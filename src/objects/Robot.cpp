@@ -53,8 +53,7 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
    if (vg == vd) { //linear
       dX = vg * cos(a) * t;
       dY = vg * sin(a) * t;
-   }
-   else { //circle
+   } else { //circle
       double R = radius * (vg + vd) / (vg - vd);
       double w = (vg - vd) / (radius * 2.0) * t;
       dX = R * (cos(a) * sin(w) - sin(a) * (1 - cos(w)));
@@ -96,7 +95,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
             setEvent(RobotEventState::NO_PARTICULE);
          } else {
             stop();
-            rotate(1, getAlignementWithParticle(item) + orientation);
+            rotate(getAlignementWithParticle(item) > 0 ? 100 : -100);
          }
       }
    }

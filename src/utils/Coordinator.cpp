@@ -50,7 +50,7 @@ void Coordinator::update() {
             if (robot->hasTarget()) {
                auto target = robot->getTarget();
                double angle = robot->getAlignementWithParticle(target);
-               if (std::abs(angle) > 100) {
+               if (std::abs(angle) > 60) {
                   robot->rotateSpeed(angle > 0);
                } else {
                   auto tuple = robot->goToPositionDuration(1, target->getPosition());
