@@ -288,7 +288,9 @@ void Robot::setEvent(RobotEvent newEvent) {
    if (event == newEvent ||
        newEvent != RobotEvent::UNKNOWN && newEvent < event)
       return;
-   std::cout << "[" << getId() << "]" << int(newEvent) << std::endl;
+   std::cout << "[Event Robot#" << getId() << "] " << int(event) << " => "
+             << int(newEvent)
+             << std::endl;
    event = newEvent;
 }
 
