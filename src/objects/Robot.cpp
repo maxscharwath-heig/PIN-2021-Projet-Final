@@ -40,13 +40,8 @@ void Robot::draw(WorldWidget* widget) const {
 }
 
 RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
-   auto* prediction = new RobotData{
-         .robot =  this,
-         .position = {
-               position.x,
-               position.y,
-         },
-         .orientation = orientation
+   auto* prediction = new RobotData {
+         this,{ position.x, position.y }, orientation
    };
    double
          t = deltaTime,
@@ -106,10 +101,13 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
          setEvent(RobotEventState::PARTICULE_CONTACT, item);
-      }
-      if (canAspirateParticle(
-            item)) {//TODO: Dont know if a non-targeted particule can be aspirate...
-         toDestroy.push_back(item);
+
+         if (canAspirateParticle(item)) {
+            toDestroy.push_back(item);
+         }
+         else {
+            std::cout << "In contact but not in angle :" << std::endl;
+         }
       }
    }
 
@@ -194,8 +192,7 @@ bool Robot::addAction(double t, double vg, double vd) {
  */
 
 bool Robot::isInContactWithParticle(Particule* particule) const {
-   return position.getDistance(particule->getPosition()) <=
-          radius + particule->getRadius();
+   return position.getDistance(particule->getPosition()) <= radius + particule->getRadius();
 }
 
 bool Robot::canAspirateParticle(Particule* particule) const {
@@ -214,7 +211,6 @@ Robot::goToPosition(int speed, Position destination) {
    double R = (distance * distance / 2) /
               (cos(a) * (destination.y - position.y) -
                sin(a) * (destination.x - position.x));
-
 
    double vd = speed;
    double vg = ((R + radius) / (R - radius) * speed);
@@ -245,29 +241,27 @@ Robot::goToPositionDuration(double t, Position destination) {
    double vd = (2 * vt) / ((R + radius) / (R - radius) + 1);
    double vg = (2 * vt) - vd;
 
-   {//Limit wheel speed and recalculate time
-      limitWheelConstraint(vg, vd);
-      w = (vg - vd) / (2 * radius);
-      t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
-   }
+   //Limit wheel speed and recalculate time
+   limitWheelConstraint(vg, vd);
+   w = (vg - vd) / (2 * radius);
+   t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
+
    speedLog();
 
    double newAngle = to_deg(w * t);
-   std::cout << "Robot go to " << destination.x << ":" << destination.y
-             << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
-             << std::endl;
+
    return std::make_tuple(vg, vd, t);
 }
 
 void Robot::rotate(double time, double newOrientation) {
+   if (newOrientation == orientation) return;
+
    double now = world ? world->simulationTime : 0;
-   if (newOrientation == orientation)return;
    double a = to_rad(norm_angle(newOrientation - orientation));
    double w = a / time;
    double vg = w * radius;
    double vd = -vg;
    limitWheelConstraint(vg, vd);
-   std::cout << a << " " << vg << " " << -vg << std::endl;
 
    addAction(now, vg, vd);
    addAction(now + time, 0, 0);
@@ -303,16 +297,14 @@ void Robot::setEvent(RobotEventState newEvent, void* data) {
    if (event.event == newEvent ||
        (newEvent != RobotEventState::UNKNOWN && newEvent < event.event))
       return;
-   std::cout << "[Event Robot#" << getId() << "] " << int(event.event) << " => "
-             << int(newEvent)
-             << std::endl;
+
    event.event = newEvent;
    event.data = data;
 }
 
 void Robot::aspirate(Particule* particule) {
-   if (!particule)
-      return;
+   if (!particule) return;
+
    world->addCleanedEnergy(particule->getEnergy());
    std::stringstream ss;
    ss << world->simulationTime << " décontamination " << int(world->getCleanedEnergyRatio());
@@ -321,7 +313,7 @@ void Robot::aspirate(Particule* particule) {
 }
 
 void Robot::resetEvent() {
-   setEvent(RobotEventState::UNKNOWN);
+   setEvent(RobotEventState::UNKNOWN, nullptr);
 }
 
 int Robot::getRadius() const noexcept {
@@ -333,11 +325,13 @@ bool operator<(const Robot& a, const Robot& b) {
 }
 
 void Robot::setTarget(Particule* target) {
-   if (target == this->target)return;
-   if (this->target != nullptr)this->target->removeTargeter(this);
+
+   if (this->target != nullptr)
+      this->target->removeTargeter(this);
+
    if (target != nullptr) {
       target->addTargeter(this);
-      std::cout << "Target " << target->getId() << std::endl;
+      std::cout << getId() << " has Target " << target->getId() << std::endl;
    }
    this->target = target;
 }

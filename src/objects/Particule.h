@@ -22,6 +22,7 @@ private:
    double timeScale;
    int energy;
    std::vector<Robot*> targeter;
+   bool dead = false;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
 
@@ -70,6 +71,8 @@ public:
    int getColor() const;
 
    std::string infos() const;
+
+   bool isDead() const noexcept;
 };
 
 

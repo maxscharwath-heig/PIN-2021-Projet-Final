@@ -39,12 +39,19 @@ void Particule::draw(WorldWidget* widget) const {
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
-   int posX = (int) (widget->x() +
-                     (position.x - radius + offsetX) * scale);
-   int posY = (int) (widget->y() +
-                     (position.y - radius + offsetY) * scale);
+   int posX = (int) (widget->x() + (offsetX - position.x - radius) * scale);
+   int posY = (int) (widget->y() + (offsetY - position.y - radius) * scale);
    int size = (int) (radius * 2.0 * scale);
+
+   for (const auto& item: targeter) {
+      if (item->hasTarget() && item->getTarget() == this) {
+         fl_color(FL_GREEN);
+         break;
+      }
+   }
+
    fl_pie(posX, posY, size, size, 0, 360);
+
 }
 
 std::vector<Particule*> Particule::createChilds() const {
@@ -154,6 +161,7 @@ Particule::~Particule() {
       }
    }
    targeter.clear();
+   dead = true;
 }
 
 void Particule::addTargeter(Robot* robot) {
@@ -175,4 +183,9 @@ std::string Particule::infos() const {
    ss << " #" << getId() << " " << getPosition().x << " " << getPosition().y
       << " " << getRadius() << " " << getColor();
    return ss.str();
+}
+
+bool Particule::isDead() const noexcept
+{
+   return dead;
 }

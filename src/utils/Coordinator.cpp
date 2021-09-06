@@ -25,29 +25,41 @@ void Coordinator::update() {
       switch (robot->getEvent().event) {
          case RobotEventState::PARTICULE_CONTACT: {
             Particule* contact = (Particule*) robot->getEvent().data;
+
+//            if (contact->isDead()) {
+//               robot->setTarget(nullptr);
+//               robot->resetEvent();
+//               break;
+//            }
+
             if (contact && robot->getTarget() == contact) {
                std::cout << "Contact with target" << std::endl;
                robot->resetEvent();
             } else {
                robot->resetEvent();
             }
-         }
+
             break;
+         }
+
          case RobotEventState::NO_PARTICULE: {
             auto target = closestParticle(robot);
             robot->setTarget(target);
 
-            auto tuple = robot->goToPositionDuration(20, target->getPosition());//0gauche 1droite 2temps pour y arriver
+            //robot->goToPosition(100, target->getPosition());
 
-            robot->addAction(world->simulationTime, std::get<0>(tuple),
-                             std::get<1>(tuple));
+            //auto tuple = robot->goToPositionDuration(world->simulationTime, target->getPosition());//0gauche 1droite 2temps pour y arriver
 
+            //robot->goToPosition((int)std::get<1>(tuple), target->getPosition());
+
+            // robot->addAction(world->simulationTime, std::get<0>(tuple), std::get<1>(tuple));
             robot->resetEvent();
          }
             break;
          case RobotEventState::COLLISION_WARNING:
-            //rotate or change direction
-            //robot->resetEvent();
+            // rotate or change direction
+            //robot->rotate(world->simulationTime, 360);
+            robot->resetEvent();
             break;
          default:
          case RobotEventState::UNKNOWN:
