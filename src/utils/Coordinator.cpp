@@ -42,7 +42,6 @@ void Coordinator::update() {
          }
 
          case RobotEventState::COLLISION_WARNING:
-            // rotate or change direction
             robot->rotate(-30);
             robot->resetEvent();
             break;

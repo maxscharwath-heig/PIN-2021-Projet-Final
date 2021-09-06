@@ -11,23 +11,23 @@ void Canvas::draw(Fl_Widget* parent, Scale* scale) const {
    fl_rectf(parent->x(), parent->y(), w(scale->distance()), h(scale->distance()));
 }
 
-int Canvas::x() const noexcept{
+int Canvas::x() const noexcept {
    return -xMin;
 }
 
-int Canvas::y() const noexcept{
+int Canvas::y() const noexcept {
    return -yMin;
 }
 
-int Canvas::w(double scale) const noexcept{
+int Canvas::w(double scale) const noexcept {
    return (int) ((xMax - xMin) * scale);
 }
 
-int Canvas::h(double scale) const noexcept{
+int Canvas::h(double scale) const noexcept {
    return (int) ((yMax - yMin) * scale);
 }
 
-unsigned Canvas::TMAXE() const noexcept{
+unsigned Canvas::TMAXE() const noexcept {
    return tMaxE;
 }
 

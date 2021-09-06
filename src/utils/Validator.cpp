@@ -32,6 +32,9 @@ bool Validator::robotsSizesValids(const std::vector<Robot *>& robots) {
 
 bool Validator::robotsAndParticulesSizesValids(const std::vector<Robot *>& robots,
                                                const std::vector<Particule *>& particules) {
+
+   if (robots.empty() || particules.empty()) return true;
+
    auto smallest = std::min_element(robots.begin(), robots.end());
    auto biggest = std::min_element(robots.begin(), robots.end());
 

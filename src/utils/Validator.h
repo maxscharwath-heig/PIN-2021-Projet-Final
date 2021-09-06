@@ -1,7 +1,6 @@
 #ifndef PIN_2021_SERIE_2_VALIDATOR_H
 #define PIN_2021_SERIE_2_VALIDATOR_H
 
-
 #include <vector>
 #include "../objects/Object.h"
 #include "../objects/Robot.h"

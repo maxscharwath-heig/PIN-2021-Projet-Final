@@ -1,7 +1,6 @@
 #include "Logger.h"
 #include <fstream>
 #include <iostream>
-#include <utility>
 
 std::string Logger::fileInputName;
 
