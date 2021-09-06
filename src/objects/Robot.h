@@ -68,6 +68,10 @@ public:
 
    int getRadius() const noexcept override;
 
+   double getLSpeed() const;
+
+   double getRSpeed() const;
+
    RobotEvent getEvent() const noexcept;
 
    void resetEvent();
@@ -81,6 +85,10 @@ public:
    bool hasTarget() const noexcept;
 
    friend bool operator<(const Robot& a, const Robot& b);
+
+   std::string infos() const;
+
+   void speedLog() const;
 };
 
 struct RobotData {

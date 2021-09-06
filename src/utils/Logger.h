@@ -18,6 +18,10 @@ public:
 
    static void Log(LoggerType loggerType, const std::string& message);
 
+   static void setFileInputName(const std::string& fileName);
+
+   static std::string fileInputName;
+
 private:
    LoggerType loggerType;
    std::string message;

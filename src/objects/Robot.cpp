@@ -2,6 +2,7 @@
 #include <FL/FL_Draw.H>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include <FL/fl_ask.H>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
@@ -111,8 +112,13 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
       }
    }
 
-   for (const auto& item: toDestroy)
+   for (const auto& item: toDestroy){
+      std::stringstream ss;
+      ss << world->simulationTime << infos() << " " << item->infos();
+      Logger::Log(LoggerType::P_COLLISION, ss.str());
       aspirate(item);
+   }
+
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
@@ -124,6 +130,7 @@ void Robot::stop() noexcept{
    if (leftSpeed + rightSpeed == 0) return;
    leftSpeed = 0;
    rightSpeed = 0;
+   speedLog();
 }
 
 void Robot::emergencyStop() {
@@ -133,6 +140,7 @@ void Robot::emergencyStop() {
    setEvent(RobotEventState::COLLISION_WARNING);
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
+   speedLog();
    std::queue<RobotAction>().swap(actions); // clear actions;
 }
 
@@ -211,6 +219,7 @@ double Robot::goToPosition(int speed, Position destination) {
    { //Limit wheel speed
       limitWheelConstraint(leftSpeed, rightSpeed);
    }
+   speedLog();
 
    double w = (leftSpeed - rightSpeed) / (2 * radius);
    double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
@@ -238,6 +247,7 @@ double Robot::goToPositionDuration(double t, Position destination) {
       w = (leftSpeed - rightSpeed) / (2 * radius);
       t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
    }
+   speedLog();
 
    double newAngle = to_deg(w * t);
    std::cout << "Robot go to " << destination.x << ":" << destination.y
@@ -259,6 +269,7 @@ void Robot::rotate(double time, double newOrientation) {
    addAction(now, vg, vd);
    addAction(now + time, 0, 0);
 
+   speedLog();
 }
 
 void Robot::limitWheelConstraint(double& vg, double& vd) {
@@ -300,6 +311,9 @@ void Robot::aspirate(Particule* particule) {
    if (!particule)
       return;
    world->addCleanedEnergy(particule->getEnergy());
+   std::stringstream ss;
+   ss << world->simulationTime << " décontamination " << int(world->getCleanedEnergyRatio());
+   Logger::Log(LoggerType::SCORE, ss.str());
    world->deleteParticule(particule);
 }
 
@@ -333,4 +347,25 @@ bool Robot::hasTarget() const noexcept {
    return target != nullptr;
 }
 
+double Robot::getLSpeed() const {
+   return leftSpeed;
+}
+
+double Robot::getRSpeed() const {
+   return rightSpeed;
+}
+
+std::string Robot::infos() const {
+   std::stringstream ss;
+   ss << " #" << getId() << " " << getPosition().x << " " << getPosition().y
+      << " " << getRadius() << " " << to_rad(orientation)
+      << " " << getLSpeed() << " " << getRSpeed();
+   return ss.str();
+}
+
+void Robot::speedLog() const {
+   std::stringstream ss;
+   ss << world->simulationTime << infos();
+   Logger::Log(LoggerType::R_VELOCITY, ss.str());
+}
 

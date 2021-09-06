@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <sstream>
+#include "../utils/Logger.h"
 #include "World.h"
 
 void World::clear() {
@@ -74,11 +76,18 @@ void World::update(WorldWidget* widget, double deltaTime) {
       for (const auto& b: robotsPredicted) {
          if (a == b) continue;
          if (Robot::collision(a, b)) {
+            std::stringstream ss;
+            ss << simulationTime << a->robot->infos() << " " << b->robot->infos();
+            Logger::Log(LoggerType::R_COLLISION, ss.str());
+
             a->robot->emergencyStop();
+            b->robot->emergencyStop();
+
             break;
          }
       }
    }
+
    for (const auto& item: robots) {
       item->update(widget, deltaTime);
    }

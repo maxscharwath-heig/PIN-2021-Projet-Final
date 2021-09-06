@@ -3,6 +3,8 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm>
+#include <sstream>
+#include "../utils/Logger.h"
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "./Robot.h"
@@ -92,13 +94,23 @@ unsigned Particule::getDecomposeLevel() const noexcept {
 
 void Particule::explode() {
    if (!world) return;
+
+   std::stringstream ss;
+   ss << world->simulationTime;
+
    if (getDecomposeTime() <= getDestroyTime() &&
        getDecomposeLevel() <= DECOMPOSE_LEVEL) {
+      ss << " décomposition ";
       for (Particule* part: createChilds()) {
          world->addParticule(part);
       }
    }
+   else{
+      ss << " désintégration ";
+   }
+   ss << int(world->getCleanedEnergyRatio());
    world->deleteParticule(this);
+   Logger::Log(LoggerType::SCORE, ss.str());
 }
 
 unsigned Particule::getLifetimeUntilDeath(unsigned n, unsigned index) const {
@@ -152,4 +164,15 @@ void Particule::removeTargeter(Robot* robot) {
    auto el = std::find(targeter.begin(), targeter.end(), robot);
    if (el == targeter.end()) return;
    targeter.erase(el);
+}
+
+int Particule::getColor() const {
+   return color;
+}
+
+std::string Particule::infos() const {
+   std::stringstream ss;
+   ss << " #" << getId() << " " << getPosition().x << " " << getPosition().y
+      << " " << getRadius() << " " << getColor();
+   return ss.str();
 }

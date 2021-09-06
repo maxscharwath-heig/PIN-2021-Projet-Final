@@ -66,6 +66,10 @@ public:
    void addTargeter(Robot* robot);
 
    void removeTargeter(Robot* robot);
+
+   int getColor() const;
+
+   std::string infos() const;
 };
 
 

@@ -6,6 +6,7 @@
 #include "MainWindow.h"
 #include "Fl_Center_Scroll.h"
 #include "../utils/Defaults.h"
+#include "../utils/Logger.h"
 
 const int MainWindow::MIN_WIDTH = 750;
 const int MainWindow::MIN_HEIGHT = 300;
@@ -109,6 +110,7 @@ void MainWindow::openFile(Fl_Widget* widget, void* data) {
 
    window->worldWidget->world->clear();
    std::string inputPath = window->inputFile->value();
+   Logger::setFileInputName(inputPath);
 
    try {
       window->worldWidget->parseFile(inputPath);
