@@ -40,8 +40,8 @@ void Robot::draw(WorldWidget* widget) const {
 }
 
 RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
-   auto* prediction = new RobotData {
-         this,{ position.x, position.y }, orientation
+   auto* prediction = new RobotData{
+         this, {position.x, position.y}, orientation
    };
    double
          t = deltaTime,
@@ -85,6 +85,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
       if (world->simulationTime >= last.time) {
          leftSpeed = last.vg;
          rightSpeed = last.vd;
+         speedLog();
          actions.pop();
       }
    }
@@ -105,15 +106,14 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
          if (canAspirateParticle(item)) {
             toDestroy.push_back(item);
             setEvent(RobotEventState::NO_PARTICULE);
-         }
-         else {
+         } else {
             //stop();
             rotate(2, getAlignementWithParticle(item) + orientation);
          }
       }
    }
 
-   for (const auto& item: toDestroy){
+   for (const auto& item: toDestroy) {
       std::stringstream ss;
       ss << world->simulationTime << infos() << " " << item->infos();
       Logger::Log(LoggerType::P_COLLISION, ss.str());
@@ -195,7 +195,8 @@ bool Robot::addAction(double t, double vg, double vd) {
  */
 
 bool Robot::isInContactWithParticle(Particule* particule) const {
-   return position.getDistance(particule->getPosition()) <= radius + particule->getRadius();
+   return position.getDistance(particule->getPosition()) <=
+          radius + particule->getRadius();
 }
 
 bool Robot::canAspirateParticle(Particule* particule) const {
@@ -217,10 +218,8 @@ Robot::goToPosition(int speed, Position destination) {
 
    double vd = speed;
    double vg = ((R + radius) / (R - radius) * speed);
-    //Limit wheel speed
+   //Limit wheel speed
    limitWheelConstraint(vg, vd);
-
-   speedLog();
 
    double w = (vg - vd) / (2 * radius);
    double t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
@@ -250,8 +249,6 @@ Robot::goToPositionDuration(double t, Position destination) {
    w = (vg - vd) / (2 * radius);
    t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
 
-   speedLog();
-
    double newAngle = to_deg(w * t);
 
    return std::make_tuple(vg, vd, t);
@@ -269,8 +266,6 @@ void Robot::rotate(double time, double newOrientation) {
 
    addAction(now, vg, vd);
    addAction(now + time, 0, 0);
-
-   speedLog();
 }
 
 void Robot::limitWheelConstraint(double& vg, double& vd) {
@@ -314,7 +309,8 @@ void Robot::aspirate(Particule* particule) {
 
    world->addCleanedEnergy(particule->getEnergy());
    std::stringstream ss;
-   ss << world->simulationTime << " décontamination " << int(world->getCleanedEnergyRatio());
+   ss << world->simulationTime << " décontamination "
+      << int(world->getCleanedEnergyRatio());
    Logger::Log(LoggerType::SCORE, ss.str());
    world->deleteParticule(particule);
 }
