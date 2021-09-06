@@ -46,8 +46,6 @@ void MainWindow::registerFileLoadButtons(Fl_Widget* widget, void* data) {
                                     "Fichier");
    window->inputFile->align(FL_ALIGN_TOP_LEFT);
 
-   window->inputFile->value("demo.dat"); // Temporary for testing
-
    window->openButton = new Fl_Button(window->w() - 480, TOOLBAR_Y, DEFAULT_BTN_W,
                                       DEFAULT_BTN_H, "ouvrir");
    window->openButton->callback(openFile, window);
@@ -92,7 +90,9 @@ void MainWindow::erase_dp(Fl_Widget* widget, void* data) {
    window->scrollbars->hide();
    window->loadedFilename.clear();
    window->fileLoadGroup->activate();
+   window->inputFile->value("");
    window->label(DEFAULT_LABEL);
+   window->resize(window->x(), window->y(), MIN_WIDTH, MIN_HEIGHT);
 }
 
 void MainWindow::quit_cb(Fl_Widget* widget, void* data) {
