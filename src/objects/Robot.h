@@ -24,7 +24,6 @@ struct RobotEvent {
 class Robot : public Object {
 private:
    const int radius;
-   double orientation;
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
    RobotEvent event;
@@ -92,6 +91,7 @@ public:
    void clearAction();
 
    Particule* target;
+   double orientation;
 };
 
 struct RobotData {

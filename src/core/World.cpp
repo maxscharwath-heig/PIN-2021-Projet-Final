@@ -72,15 +72,14 @@ void World::update(WorldWidget* widget, double deltaTime) {
    }
 
    for (const auto& a: robotsPredicted) {
+      a->robot->isEmergencyStopped = false;
       for (const auto& b: robotsPredicted) {
          if (a == b) continue;
          if (Robot::collision(a, b)) {
             std::stringstream ss;
             ss << simulationTime << a->robot->infos() << " " << b->robot->infos();
             Logger::Log(LoggerType::R_COLLISION, ss.str());
-
             a->robot->emergencyStop();
-            b->robot->emergencyStop();
             break;
          }
       }
@@ -107,8 +106,7 @@ double World::getCleanedEnergyRatio() const noexcept {
 
 void World::ready() {}
 
-std::vector<Object *> World::getAllObjects() const
-{
+std::vector<Object*> World::getAllObjects() const {
    std::vector<Object*> objects;
    objects.reserve(robots.size() + particules.size());
    objects.insert(objects.end(), robots.begin(), robots.end());
@@ -122,7 +120,6 @@ void World::addCleanedEnergy(int energy) noexcept {
       cleanedEnergy += energy;
 }
 
-World::~World()
-{
+World::~World() {
    clear();
 }

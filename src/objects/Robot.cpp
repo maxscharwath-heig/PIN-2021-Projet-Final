@@ -136,14 +136,14 @@ void Robot::stop() noexcept {
 }
 
 void Robot::emergencyStop() {
-   if (!isEmergencyStopped)
+   if (!isEmergencyStopped) {
       fl_beep(FL_BEEP_ERROR);
-
+      this->clearAction();
+      isEmergencyStopped = true;
+      leftSpeed = rightSpeed = 0;
+   }
    setEvent(RobotEventState::COLLISION_WARNING);
-   isEmergencyStopped = true;
-   leftSpeed = rightSpeed = 0;
-   speedLog();
-   this->clearAction(); // clear actions;
+   speedLog(); // clear actions;
 }
 
 bool Robot::addAction(double t, double vg, double vd) {

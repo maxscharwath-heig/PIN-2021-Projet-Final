@@ -50,7 +50,7 @@ void Coordinator::update() {
 
          case RobotEventState::COLLISION_WARNING:
             // rotate or change direction
-            //robot->rotate(world->simulationTime, 360);
+            robot->rotate(2, robot->orientation + 90);
             robot->resetEvent();
             break;
          default:
