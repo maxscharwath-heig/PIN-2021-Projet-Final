@@ -34,6 +34,7 @@ void Particule::draw(WorldWidget* widget) const {
    double scale = widget->scale->distance();
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
+
    int posX = (int) (widget->x() +
                      (position.x - radius + offsetX) * scale);
    int posY = (int) (widget->y() +

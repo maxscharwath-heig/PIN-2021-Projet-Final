@@ -1,6 +1,7 @@
 #include "WorldWidget.h"
 #include "Fl_Center_Scroll.h"
 #include "MainWindow.h"
+#include "../utils/Validator.h"
 #include <FL/fl_draw.H>
 #include <iostream>
 #include <fstream>
@@ -151,6 +152,12 @@ void WorldWidget::parseFile(const std::string& fileName) {
    }
    file.close();
    size(canvas->w(scale->distance()), canvas->h(scale->distance()));
+
+   // Validate spacial constraints
+   if (Validator::itemsOverlapping(world->getAllObjects())) {
+      throw std::invalid_argument("Overlapping objects");
+   }
+
    world->ready();
    // TODO: Change cycles values
    Fl::add_timeout(refreshCycle, perform, (void*) this);
@@ -175,4 +182,3 @@ void WorldWidget::updateTimeLabel() {
       MainWindow::updateScoreLabel(parent()->window(), parent()->window(),(int) world->getCleanedEnergyRatio());
    }
 }
-

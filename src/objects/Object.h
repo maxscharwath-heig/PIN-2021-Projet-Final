@@ -41,6 +41,8 @@ public:
    void init(unsigned id);
 
    unsigned int getId() const;
+
+   virtual int getRadius() const = 0;
 };
 
 

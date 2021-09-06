@@ -50,6 +50,8 @@ public:
    void rotate(double time, double orientation);
 
    void emergencyStop();
+
+   int getRadius() const override;
 };
 
 struct RobotData {

@@ -24,8 +24,8 @@ void Robot::draw(WorldWidget* widget) const {
 
    fl_color(isEmergencyStopped ? FL_RED : FL_BLACK);
    //body
-   fl_circle(widget->x() + (position.x + offsetX) * scale,
-             widget->y() + (position.y + offsetY) * scale,
+   fl_circle(widget->x() + (offsetX - position.x) * scale,
+             widget->y() + (offsetY - position.y) * scale,
              radius * scale);
    //head
    double headSize = radius / 4.0;
@@ -33,8 +33,8 @@ void Robot::draw(WorldWidget* widget) const {
    double x1 = position.x + ((radius - headSize * 2) * cos(a));
    double y1 = position.y + ((radius - headSize * 2) * sin(a));
 
-   fl_circle(widget->x() + (x1 + offsetX) * scale,
-             widget->y() + (y1 + offsetY) * scale,
+   fl_circle(widget->x() + (offsetX - x1) * scale,
+             widget->y() + (offsetY - y1) * scale,
              headSize * scale);
 }
 
@@ -286,3 +286,10 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
       vd = ratio * vg;
    }
 }
+
+int Robot::getRadius() const
+{
+   return radius;
+}
+
+

@@ -47,6 +47,8 @@ public:
    int getTotalEnergy() const;
 
    double getCleanedEnergyRatio() const;
+
+   std::vector<Object*> getAllObjects() const;
 };
 
 const size_t DECOMPOSE_LEVEL = 4;
