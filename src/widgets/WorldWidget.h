@@ -10,7 +10,6 @@
 class WorldWidget : public Fl_Widget {
 
 private:
-   int timer = 0;
    bool simulationPaused = true;
    static const int MAX_COLOR = 8;
    const std::array<int, MAX_COLOR> colors = {FL_BLACK, FL_WHITE, FL_RED, 90,

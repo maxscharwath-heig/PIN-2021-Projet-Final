@@ -1,7 +1,3 @@
-//
-// Created by Maxime on 04.09.2021.
-//
-
 #ifndef PIN_2021_SERIE_2_UTILS_H
 #define PIN_2021_SERIE_2_UTILS_H
 

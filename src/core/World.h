@@ -27,8 +27,6 @@ public:
 
    void updateParticules();
 
-   void explode(Particule* particule);
-
    std::vector<Robot*> robots;
    std::vector<Particule*> particules;
    double simulationTime;

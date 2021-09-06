@@ -89,7 +89,6 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    if (!actions.empty()) {
       auto last = actions.front();
       if (world->simulationTime >= last.time) {
-         std::cout << "new move" << std::endl;
          leftSpeed = last.vg;
          rightSpeed = last.vd;
          actions.pop();
@@ -104,13 +103,14 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
          stop();
-         if(canAspirateParticle(item)){
+         if (canAspirateParticle(item)) {
             toDestroy.push_back(item);
-         } else{
+         }
+         else {
             rotate(1, orientation + getAlignementWithParticle(item));
          }
-         // std::cout << getAlignementWithParticle(item) << std::endl;
-      } else if (!leftSpeed, !rightSpeed){
+      }
+      else if (!leftSpeed, !rightSpeed){
          // for testing purpose
          leftSpeed = 50.;
          rightSpeed = 50.;
@@ -135,9 +135,9 @@ void Robot::stop() {
 bool Robot::addAction(double t, double vg, double vd) {
    bool useConstraint = false;
 
-   if (!world)return false;
+   if (!world) return false;
 
-   if (t < 0 || world && t < world->simulationTime) {
+   if (t < 0 || (world && t < world->simulationTime)) {
       Logger::Log(LoggerType::WARNING, "Cant send a command in the past");
       return false;
    }
