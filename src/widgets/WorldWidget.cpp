@@ -39,6 +39,7 @@ void WorldWidget::perform(void* userdata) {
          ss << "Partie terminée avec " << std::setprecision(2)
             << o->world->getCleanedEnergyRatio() << "% de particules détruites.";
          fl_alert("%s", ss.str().c_str());
+         o->world->resetEnergy();
          MainWindow::erase_dp(o->parent()->window(), o->parent()->window());
       }
    }

@@ -120,6 +120,12 @@ void World::addCleanedEnergy(int energy) noexcept {
       cleanedEnergy += energy;
 }
 
+void World::resetEnergy() noexcept {
+   totalEnergy =  0;
+   cleanedEnergy = 0;
+}
+
+
 World::~World() {
    clear();
 }
