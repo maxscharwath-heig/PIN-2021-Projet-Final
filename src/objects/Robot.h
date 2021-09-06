@@ -98,6 +98,8 @@ public:
    bool isRotating() const;
 
    void rotate(double speed);
+
+   void rotateSpeed(bool dir);
 };
 
 struct RobotData {

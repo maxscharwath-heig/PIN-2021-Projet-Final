@@ -264,6 +264,16 @@ void Robot::rotate(double speed) {
    addAction(now, vg, vd);
 }
 
+void Robot::rotateSpeed(bool dir) {
+   double now = world ? world->simulationTime : 0;
+   double s1 = world ? 2 * world->constraint.vMax + world->constraint.vMin : 50;
+   double s2 = world ? -world->constraint.vMin : -10;
+   double vg = dir ? s1 : s2;
+   double vd = dir ? s2 : s1;
+   limitWheelConstraint(vg, vd);
+   addAction(now, vg, vd);
+}
+
 void Robot::rotate(double time, double newOrientation) {
    if (newOrientation == orientation) return;
 
