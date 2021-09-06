@@ -97,7 +97,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 
    std::vector<Particule*> toDestroy;
 
-   if (dynamic_cast<Particule*>(target)) {
+   if (!hasTarget()) {
       setEvent(RobotEvent::NO_PARTICULE);
    }
 
@@ -305,14 +305,25 @@ void Robot::resetEvent() {
    setEvent(RobotEvent::UNKNOWN);
 }
 
-int Robot::getRadius() const
-{
+int Robot::getRadius() const {
    return radius;
 }
 
 bool operator<(const Robot& a, const Robot& b)
 {
    return a.getRadius() < b.getRadius();
+}
+
+void Robot::setTarget(Particule* target) {
+   this->target = target;
+}
+
+Particule* Robot::getTarget() {
+   return target;
+}
+
+bool Robot::hasTarget() {
+   return target;
 }
 
 

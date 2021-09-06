@@ -69,6 +69,10 @@ public:
 
    void aspirate(Particule* particule);
 
+   void setTarget(Particule* target);
+   Particule* getTarget();
+   bool hasTarget();
+
    friend bool operator <(const Robot& a, const Robot& b);
 };
 
