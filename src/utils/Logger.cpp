@@ -5,8 +5,7 @@
 
 std::string Logger::fileInputName;
 
-Logger::Logger(LoggerType loggerType, const std::string& message) : loggerType(
-        loggerType), message(message) {
+Logger::Logger(LoggerType loggerType, const std::string& message) {
 
    std::string fileExtension = ".dat";
    std::string::size_type i = fileInputName.find(fileExtension);
