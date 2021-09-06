@@ -50,6 +50,8 @@ public:
    void rotate(double time, double orientation);
 
    void emergencyStop();
+
+   void aspirate(Particule* particule);
 };
 
 struct RobotData {

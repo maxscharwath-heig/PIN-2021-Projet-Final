@@ -30,7 +30,6 @@ void World::updateParticules() {
    }
 
    for (const auto& item: particulesToDelete) {
-      cleanedEnergy += item->getEnergy();
       item->explode();
    }
 }
@@ -103,4 +102,9 @@ void World::ready() {
    for (const auto& item: robots) {
       item->goToPositionDuration(10, particules.front()->getPosition());
    }
+}
+
+void World::addCleanedEnergy(int energy) {
+   if(energy > 0)
+      cleanedEnergy += energy;
 }

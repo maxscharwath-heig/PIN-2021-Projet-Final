@@ -116,7 +116,7 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    }
 
    for (const auto& item: toDestroy)
-      item->explode();
+      aspirate(item);
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
@@ -285,4 +285,11 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
       vg = (world->constraint.vMax * 2) / (1 + ratio);
       vd = ratio * vg;
    }
+}
+
+void Robot::aspirate(Particule *particule) {
+   if(!particule)
+      return;
+   world->addCleanedEnergy(particule->getEnergy());
+   world->deleteParticule(particule);
 }
