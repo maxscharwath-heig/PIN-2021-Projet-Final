@@ -104,20 +104,20 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
          stop();
-         if(canAspirateParticle(item)){
+         if (canAspirateParticle(item)) {
             toDestroy.push_back(item);
-         } else{
+         } else {
             rotate(1, orientation + getAlignementWithParticle(item));
          }
          // std::cout << getAlignementWithParticle(item) << std::endl;
-      } else if (!leftSpeed, !rightSpeed){
+      } else if (!leftSpeed, !rightSpeed) {
          // for testing purpose
          leftSpeed = 50.;
          rightSpeed = 50.;
       }
    }
 
-   for(const auto& item : toDestroy)
+   for (const auto& item: toDestroy)
       item->explode();
 }
 
@@ -208,6 +208,7 @@ double Robot::goToPosition(int speed, Position destination) {
 
    rightSpeed = speed;
    leftSpeed = ((R + radius) / (R - radius) * speed);
+   limitWheelConstraint(leftSpeed, rightSpeed);
 
    double w = (leftSpeed - rightSpeed) / (2 * radius);
    double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
@@ -230,6 +231,7 @@ void Robot::goToPositionDuration(double time, Position destination) {
    double vt = w * R;
    rightSpeed = (2 * vt) / ((R + radius) / (R - radius) + 1);
    leftSpeed = (2 * vt) - rightSpeed;
+   limitWheelConstraint(leftSpeed, rightSpeed);
 
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", leftSpeed " << leftSpeed << " rightSpeed " << rightSpeed
@@ -242,9 +244,31 @@ void Robot::rotate(double time, double newOrientation) {
    double a = to_rad(norm_angle(newOrientation - orientation));
    double w = a / time;
    double vg = w * radius;
+   double vd = -vg;
+   limitWheelConstraint(vg, vd);
    std::cout << a << " " << vg << " " << -vg << std::endl;
 
-   addAction(now, vg, -vg);
+   addAction(now, vg, vd);
    addAction(now + time, 0, 0);
 
+}
+
+void Robot::limitWheelConstraint(double& vg, double& vd) {
+   double ratio = vd / vg;
+   if (vg < vd) {
+      if (vg < -world->constraint.vMin) {
+         vg = -world->constraint.vMin;
+         vd = ratio * vg;
+      }
+   } else {
+      if (vd < -world->constraint.vMin) {
+         vd = -world->constraint.vMin;
+         vg = vd / ratio;
+      }
+   }
+
+   if ((vg + vd) / 2 >= world->constraint.vMax) {
+      vg = (world->constraint.vMax * 2) / (1 + ratio);
+      vd = ratio * vg;
+   }
 }
