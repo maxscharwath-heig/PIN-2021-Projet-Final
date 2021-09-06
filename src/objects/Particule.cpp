@@ -111,8 +111,7 @@ void Particule::explode() {
       for (Particule* part: createChilds()) {
          world->addParticule(part);
       }
-   }
-   else{
+   } else {
       ss << " désintégration ";
    }
    ss << int(world->getCleanedEnergyRatio());
@@ -133,7 +132,7 @@ double Particule::getDestroyTime() const noexcept {
    return timeOfDestroy;
 }
 
-void Particule::update(WorldWidget* widget, double deltaTime) { }
+void Particule::update(WorldWidget* widget, double deltaTime) {}
 
 void Particule::init(unsigned id) {
    Object::init(id);
@@ -155,23 +154,19 @@ int Particule::getRadius() const noexcept {
 }
 
 Particule::~Particule() {
-   for (const auto& item: targeter) {
-      if (item) {
-         item->setTarget(nullptr);
-      }
+   for (auto it: targeter) {
+      it->target = nullptr;
    }
    targeter.clear();
    dead = true;
 }
 
 void Particule::addTargeter(Robot* robot) {
-   targeter.push_back(robot);
+   targeter.insert(robot);
 }
 
 void Particule::removeTargeter(Robot* robot) {
-   auto el = std::find(targeter.begin(), targeter.end(), robot);
-   if (el == targeter.end()) return;
-   targeter.erase(el);
+   targeter.erase(targeter.find(robot));
 }
 
 int Particule::getColor() const {
@@ -185,7 +180,6 @@ std::string Particule::infos() const {
    return ss.str();
 }
 
-bool Particule::isDead() const noexcept
-{
+bool Particule::isDead() const noexcept {
    return dead;
 }

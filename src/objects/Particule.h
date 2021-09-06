@@ -2,6 +2,7 @@
 #define PIN_2021_SERIE_1_PARTICULE_H
 
 #include <FL/Fl_Widget.H>
+#include <set>
 #include <vector>
 #include "../core/Canvas.h"
 #include "Object.h"
@@ -21,7 +22,7 @@ private:
    double parentTime;
    double timeScale;
    int energy;
-   std::vector<Robot*> targeter;
+   std::set<Robot*> targeter;
    bool dead = false;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;

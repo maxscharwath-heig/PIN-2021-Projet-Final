@@ -28,7 +28,6 @@ private:
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
    RobotEvent event;
-   Particule* target;
 
    bool canAspirateParticle(Particule* particule) const;
 
@@ -91,6 +90,8 @@ public:
    void speedLog() const;
 
    void clearAction();
+
+   Particule* target;
 };
 
 struct RobotData {
