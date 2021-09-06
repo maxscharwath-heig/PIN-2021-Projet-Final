@@ -104,9 +104,11 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 
          if (canAspirateParticle(item)) {
             toDestroy.push_back(item);
+            setEvent(RobotEventState::NO_PARTICULE);
          }
          else {
-            std::cout << "In contact but not in angle :" << std::endl;
+            //stop();
+            rotate(2, getAlignementWithParticle(item) + orientation);
          }
       }
    }
@@ -127,6 +129,7 @@ bool Robot::collision(RobotData* a, RobotData* b) {
 
 void Robot::stop() noexcept {
    if (leftSpeed + rightSpeed == 0) return;
+
    leftSpeed = 0;
    rightSpeed = 0;
    speedLog();
@@ -214,9 +217,9 @@ Robot::goToPosition(int speed, Position destination) {
 
    double vd = speed;
    double vg = ((R + radius) / (R - radius) * speed);
-   { //Limit wheel speed
-      limitWheelConstraint(vg, vd);
-   }
+    //Limit wheel speed
+   limitWheelConstraint(vg, vd);
+
    speedLog();
 
    double w = (vg - vd) / (2 * radius);
@@ -225,6 +228,7 @@ Robot::goToPosition(int speed, Position destination) {
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
              << std::endl;
+
    return std::make_tuple(vg, vd, t);
 }
 
@@ -287,6 +291,9 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
       vg = (world->constraint.vMax * 2) / (1 + ratio);
       vd = ratio * vg;
    }
+
+   this->leftSpeed = vg;
+   this->rightSpeed = vd;
 }
 
 RobotEvent Robot::getEvent() const noexcept {
@@ -331,7 +338,6 @@ void Robot::setTarget(Particule* target) {
 
    if (target != nullptr) {
       target->addTargeter(this);
-      std::cout << getId() << " has Target " << target->getId() << std::endl;
    }
    this->target = target;
 }
