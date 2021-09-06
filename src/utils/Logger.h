@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <string>
-#include <ctime>
 
 enum class LoggerType {
    SCORE, R_VELOCITY, R_COLLISION, P_COLLISION, WARNING
@@ -25,7 +24,6 @@ public:
 private:
    LoggerType loggerType;
    std::string message;
-   time_t eventTime;
 };
 
 
