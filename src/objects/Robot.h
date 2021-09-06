@@ -38,7 +38,7 @@ private:
 
    void limitWheelConstraint(double& vg, double& vd);
 
-   void setEvent(RobotEventState newEvent, void* data = 0);
+   void setEvent(RobotEventState newEvent, void* data = nullptr);
 
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,
