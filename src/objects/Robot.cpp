@@ -23,6 +23,7 @@ void Robot::draw(WorldWidget* widget) const {
    double offsetX = widget->canvas->x();
    double offsetY = widget->canvas->y();
 
+   fl_color(FL_BLACK);
    //body
    fl_circle(widget->x() + (offsetX - position.x) * scale,
              widget->y() + (offsetY - position.y) * scale,
