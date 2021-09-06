@@ -105,12 +105,10 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
          stop();
          if (canAspirateParticle(item)) {
             toDestroy.push_back(item);
-         }
-         else {
+         } else {
             rotate(1, orientation + getAlignementWithParticle(item));
          }
-      }
-      else if (!leftSpeed, !rightSpeed) {
+      } else if (!leftSpeed, !rightSpeed) {
          // for testing purpose
          leftSpeed = 50.;
          rightSpeed = 50.;
@@ -208,7 +206,9 @@ double Robot::goToPosition(int speed, Position destination) {
 
    rightSpeed = speed;
    leftSpeed = ((R + radius) / (R - radius) * speed);
-   limitWheelConstraint(leftSpeed, rightSpeed);
+   { //Limit wheel speed
+      limitWheelConstraint(leftSpeed, rightSpeed);
+   }
 
    double w = (leftSpeed - rightSpeed) / (2 * radius);
    double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
@@ -219,23 +219,29 @@ double Robot::goToPosition(int speed, Position destination) {
    return t;
 }
 
-void Robot::goToPositionDuration(double time, Position destination) {
+double Robot::goToPositionDuration(double t, Position destination) {
    double a = to_rad(orientation);
    double distance = position.getDistance(destination);
    double R = (distance * distance / 2) /
               (cos(a) * (destination.y - position.y) -
                sin(a) * (destination.x - position.x));
 
-   std::cout << "R: " << R << std::endl;
-   double w = (2.0 * asin((distance / 2.0) / R)) / time;
+   double w = (2.0 * asin((distance / 2.0) / R)) / t;
    double vt = w * R;
    rightSpeed = (2 * vt) / ((R + radius) / (R - radius) + 1);
    leftSpeed = (2 * vt) - rightSpeed;
-   limitWheelConstraint(leftSpeed, rightSpeed);
 
+   {//Limit wheel speed and recalculate time
+      limitWheelConstraint(leftSpeed, rightSpeed);
+      w = (leftSpeed - rightSpeed) / (2 * radius);
+      t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
+   }
+
+   double newAngle = to_deg(w * t);
    std::cout << "Robot go to " << destination.x << ":" << destination.y
-             << ", leftSpeed " << leftSpeed << " rightSpeed " << rightSpeed
+             << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
              << std::endl;
+   return t;
 }
 
 void Robot::rotate(double time, double newOrientation) {
