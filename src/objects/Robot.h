@@ -23,6 +23,8 @@ private:
 
    bool isInContactWithParticle(Particule* particule);
 
+   void limitWheelConstraint(double& vg, double& vd);
+
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,
          int rightSpeed);
@@ -43,7 +45,7 @@ public:
 
    double goToPosition(int speed, Position destination);
 
-   void goToPositionDuration(double time, Position destination);
+   double goToPositionDuration(double t, Position destination);
 
    void rotate(double time, double orientation);
 };
