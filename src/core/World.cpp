@@ -30,7 +30,6 @@ void World::updateParticules() {
    }
 
    for (const auto& item: particulesToDelete) {
-      //cleanedEnergy += item->getEnergy();
       item->explode();
    }
 }
@@ -100,9 +99,6 @@ double World::getCleanedEnergyRatio() const {
 }
 
 void World::ready() {
-   for (const auto& item: robots) {
-      item->goToPositionDuration(10, particules.front()->getPosition());
-   }
 }
 
 std::vector<Object *> World::getAllObjects() const
@@ -113,4 +109,9 @@ std::vector<Object *> World::getAllObjects() const
    objects.insert(objects.end(), particules.begin(), particules.end());
 
    return objects;
+}
+
+void World::addCleanedEnergy(int energy) {
+   if (energy > 0)
+      cleanedEnergy += energy;
 }

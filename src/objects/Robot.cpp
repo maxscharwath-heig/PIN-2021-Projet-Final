@@ -6,7 +6,6 @@
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "../utils/Logger.h"
-#include "../utils/Utils.h"
 
 Robot::Robot(Position position, int radius, int orientation, int leftSpeed,
              int rightSpeed) :
@@ -84,8 +83,6 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 }
 
 void Robot::update(WorldWidget* widget, double deltaTime) {
-
-   //goToPosition(100, world->particules.front()->getPosition());
    if (!actions.empty()) {
       auto last = actions.front();
       if (world->simulationTime >= last.time) {
@@ -100,23 +97,22 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 
    std::vector<Particule*> toDestroy;
 
+   if (dynamic_cast<Particule*>(target)) {
+      setEvent(RobotEvent::NO_PARTICULE);
+   }
+
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
-         stop();
-         if (canAspirateParticle(item)) {
-            toDestroy.push_back(item);
-         } else {
-            rotate(1, orientation + getAlignementWithParticle(item));
-         }
-      } else if (!leftSpeed, !rightSpeed) {
-         // for testing purpose
-         leftSpeed = 50.;
-         rightSpeed = 50.;
+         setEvent(RobotEvent::PARTICULE_CONTACT);
+      }
+      if (canAspirateParticle(
+            item)) {//TODO: Dont know if a non-targeted particule can be aspirate...
+         toDestroy.push_back(item);
       }
    }
 
    for (const auto& item: toDestroy)
-      item->explode();
+      aspirate(item);
 }
 
 bool Robot::collision(RobotData* a, RobotData* b) {
@@ -133,14 +129,13 @@ void Robot::stop() {
 void Robot::emergencyStop() {
    if (!isEmergencyStopped)
       fl_beep(FL_BEEP_ERROR);
+   setEvent(RobotEvent::COLLISION_WARNING);
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
    std::queue<RobotAction>().swap(actions);//clear actions;
 }
 
 bool Robot::addAction(double t, double vg, double vd) {
-   bool useConstraint = false;
-
    if (!world) return false;
 
    if (t < 0 || (world && t < world->simulationTime)) {
@@ -153,24 +148,23 @@ bool Robot::addAction(double t, double vg, double vd) {
       return false;
    }
 
-   if (useConstraint) {
-      if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
-         Logger::Log(LoggerType::WARNING, "Error vMin");
-         return false;
-      }
-      if ((vg + vd) / 2 >= world->constraint.vMax) {
-         Logger::Log(LoggerType::WARNING, "Error vMax");
-         return false;
-      }
-      if (!actions.empty() &&
-          abs(actions.back().time - t) < world->constraint.dtMin) {
+   if (vg <= -world->constraint.vMin || vd <= -world->constraint.vMin) {
+      Logger::Log(LoggerType::WARNING, "Error vMin");
+      return false;
+   }
+   if ((vg + vd) / 2 >= world->constraint.vMax) {
+      Logger::Log(LoggerType::WARNING, "Error vMax");
+      return false;
+   }
+   if (!actions.empty()) {
+      auto last = actions.back();
+      if (abs(last.time - t) < world->constraint.dtMin) {
          Logger::Log(LoggerType::WARNING,
                      "Need to wait more");
          return false;
       }
-      if (!actions.empty() &&
-          abs(vg - actions.back().vg) >= world->constraint.dvMax ||
-          abs(vd - actions.back().vd) >= world->constraint.dvMax) {
+      if (abs(vg - last.vg) >= world->constraint.dvMax ||
+          abs(vd - last.vd) >= world->constraint.dvMax) {
          Logger::Log(LoggerType::WARNING,
                      "Velocity too big");
          return false;
@@ -195,8 +189,7 @@ bool Robot::isInContactWithParticle(Particule* particule) {
 }
 
 bool Robot::canAspirateParticle(Particule* particule) {
-   // TODO: reset to 1 degree
-   return abs(getAlignementWithParticle(particule)) <= 10. &&
+   return abs(getAlignementWithParticle(particule)) <= 1. &&
           isInContactWithParticle(particule);
 }
 
@@ -285,6 +278,29 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
       vg = (world->constraint.vMax * 2) / (1 + ratio);
       vd = ratio * vg;
    }
+}
+
+RobotEvent Robot::getEvent() {
+   return event;
+}
+
+void Robot::setEvent(RobotEvent newEvent) {
+   if (event == newEvent ||
+       newEvent != RobotEvent::UNKNOWN && newEvent < event)
+      return;
+   std::cout << "[" << getId() << "]" << int(newEvent) << std::endl;
+   event = newEvent;
+}
+
+void Robot::aspirate(Particule* particule) {
+   if (!particule)
+      return;
+   world->addCleanedEnergy(particule->getEnergy());
+   world->deleteParticule(particule);
+}
+
+void Robot::resetEvent() {
+   setEvent(RobotEvent::UNKNOWN);
 }
 
 int Robot::getRadius() const

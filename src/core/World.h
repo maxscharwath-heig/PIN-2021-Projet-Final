@@ -49,6 +49,8 @@ public:
    double getCleanedEnergyRatio() const;
 
    std::vector<Object*> getAllObjects() const;
+
+   void addCleanedEnergy(int energy);
 };
 
 const size_t DECOMPOSE_LEVEL = 4;

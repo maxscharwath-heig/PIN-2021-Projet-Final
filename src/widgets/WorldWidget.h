@@ -6,6 +6,7 @@
 #include "../core/Scale.h"
 #include "../core/Canvas.h"
 #include "../core/World.h"
+#include "../utils/Coordinator.h"
 
 class WorldWidget : public Fl_Widget {
 
@@ -40,6 +41,7 @@ public:
    std::chrono::time_point<std::chrono::high_resolution_clock> lastTickTime;
    Scale* scale;
    Canvas* canvas;
+   Coordinator* coordinator;
 };
 
 #endif //PIN_2021_SERIE_1_WORLDWIDGET_H

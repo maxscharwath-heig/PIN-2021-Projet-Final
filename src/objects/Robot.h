@@ -9,6 +9,12 @@
 
 struct RobotData;
 struct RobotAction;
+enum class RobotEvent {//priority LOW -> HIGH
+   UNKNOWN = 0,
+   PARTICULE_CONTACT,
+   NO_PARTICULE,
+   COLLISION_WARNING,
+};
 
 class Robot : public Object {
 private:
@@ -16,6 +22,8 @@ private:
    double orientation;
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
+   RobotEvent event = RobotEvent::UNKNOWN;
+   Particule* target;
 
    double getAlignementWithParticle(Particule* particule);
 
@@ -24,6 +32,8 @@ private:
    bool isInContactWithParticle(Particule* particule);
 
    void limitWheelConstraint(double& vg, double& vd);
+
+   void setEvent(RobotEvent newEvent);
 
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,
@@ -52,6 +62,12 @@ public:
    void emergencyStop();
 
    int getRadius() const override;
+
+   RobotEvent getEvent();
+
+   void resetEvent();
+
+   void aspirate(Particule* particule);
 };
 
 struct RobotData {
