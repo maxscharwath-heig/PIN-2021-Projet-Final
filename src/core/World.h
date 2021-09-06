@@ -52,6 +52,8 @@ public:
 
    void addCleanedEnergy(int energy) noexcept;
 
+   void resetEnergy() noexcept;
+
    ~World();
 };
 
