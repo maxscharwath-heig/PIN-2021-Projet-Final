@@ -17,7 +17,7 @@ bool Validator::itemsOverlapping(const std::vector<Object *>& objects)
 bool Validator::areOverlapping(Object *a, Object *b)
 {
    double distance = sqrt(pow(a->getPosition().x - b->getPosition().x, 2) + (pow(a->getPosition().y - b->getPosition().y, 2)));
-   return distance <= (b->getRadius() + a->getRadius()) && distance >= abs(b->getRadius() - a->getRadius());
+   return distance < (b->getRadius() + a->getRadius()) && distance >= abs(b->getRadius() - a->getRadius());
 }
 
 bool Validator::robotsSizesValids(const std::vector<Robot *>& robots) {
