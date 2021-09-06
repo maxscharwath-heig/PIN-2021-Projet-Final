@@ -84,8 +84,6 @@ RobotData* Robot::predict(WorldWidget* widget, double deltaTime) {
 }
 
 void Robot::update(WorldWidget* widget, double deltaTime) {
-
-   //goToPosition(100, world->particules.front()->getPosition());
    if (!actions.empty()) {
       auto last = actions.front();
       if (world->simulationTime >= last.time) {
@@ -100,18 +98,17 @@ void Robot::update(WorldWidget* widget, double deltaTime) {
 
    std::vector<Particule*> toDestroy;
 
+   if (!target) {
+      setEvent(RobotEvent::NO_PARTICULE);
+   }
+
    for (const auto& item: world->particules) {
       if (isInContactWithParticle(item)) {
-         stop();
-         if (canAspirateParticle(item)) {
-            toDestroy.push_back(item);
-         } else {
-            rotate(1, orientation + getAlignementWithParticle(item));
-         }
-      } else if (!leftSpeed, !rightSpeed) {
-         // for testing purpose
-         leftSpeed = 50.;
-         rightSpeed = 50.;
+         setEvent(RobotEvent::PARTICULE_CONTACT);
+      }
+      if (canAspirateParticle(
+            item)) {//TODO: Dont know if a non-targeted particule can be aspirate...
+         toDestroy.push_back(item);
       }
    }
 
@@ -133,6 +130,7 @@ void Robot::stop() {
 void Robot::emergencyStop() {
    if (!isEmergencyStopped)
       fl_beep(FL_BEEP_ERROR);
+   setEvent(RobotEvent::COLLISION_WARNING);
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
    std::queue<RobotAction>().swap(actions);//clear actions;
@@ -195,8 +193,7 @@ bool Robot::isInContactWithParticle(Particule* particule) {
 }
 
 bool Robot::canAspirateParticle(Particule* particule) {
-   // TODO: reset to 1 degree
-   return abs(getAlignementWithParticle(particule)) <= 10. &&
+   return abs(getAlignementWithParticle(particule)) <= 1. &&
           isInContactWithParticle(particule);
 }
 
@@ -287,9 +284,22 @@ void Robot::limitWheelConstraint(double& vg, double& vd) {
    }
 }
 
-void Robot::aspirate(Particule *particule) {
-   if(!particule)
+RobotEvent Robot::getEvent() {
+   return event;
+}
+
+void Robot::setEvent(RobotEvent newEvent) {
+   if (newEvent != RobotEvent::UNKNOWN || newEvent < event) return;
+   event = newEvent;
+}
+
+void Robot::aspirate(Particule* particule) {
+   if (!particule)
       return;
    world->addCleanedEnergy(particule->getEnergy());
    world->deleteParticule(particule);
+}
+
+void Robot::resetEvent() {
+   event = RobotEvent::UNKNOWN;
 }
