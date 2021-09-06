@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <FL/fl_ask.H>
+#include <tuple>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
 #include "../utils/Logger.h"
@@ -126,7 +127,7 @@ bool Robot::collision(RobotData* a, RobotData* b) {
    return distance <= a->robot->radius + b->robot->radius;
 }
 
-void Robot::stop() noexcept{
+void Robot::stop() noexcept {
    if (leftSpeed + rightSpeed == 0) return;
    leftSpeed = 0;
    rightSpeed = 0;
@@ -206,7 +207,8 @@ double Robot::getAlignementWithParticle(Particule* particule) const {
    return norm_angle(position.getAngle(particule->getPosition()) - orientation);
 }
 
-double Robot::goToPosition(int speed, Position destination) {
+std::tuple<double, double, double>
+Robot::goToPosition(int speed, Position destination) {
    double a = to_rad(orientation);
    double distance = position.getDistance(destination);
    double R = (distance * distance / 2) /
@@ -214,23 +216,24 @@ double Robot::goToPosition(int speed, Position destination) {
                sin(a) * (destination.x - position.x));
 
 
-   rightSpeed = speed;
-   leftSpeed = ((R + radius) / (R - radius) * speed);
+   double vd = speed;
+   double vg = ((R + radius) / (R - radius) * speed);
    { //Limit wheel speed
-      limitWheelConstraint(leftSpeed, rightSpeed);
+      limitWheelConstraint(vg, vd);
    }
    speedLog();
 
-   double w = (leftSpeed - rightSpeed) / (2 * radius);
-   double t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
+   double w = (vg - vd) / (2 * radius);
+   double t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
    double newAngle = to_deg(w * t);
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
              << std::endl;
-   return t;
+   return std::make_tuple(vg, vd, t);
 }
 
-double Robot::goToPositionDuration(double t, Position destination) {
+std::tuple<double, double, double>
+Robot::goToPositionDuration(double t, Position destination) {
    double a = to_rad(orientation);
    double distance = position.getDistance(destination);
    double R = (distance * distance / 2) /
@@ -239,13 +242,13 @@ double Robot::goToPositionDuration(double t, Position destination) {
 
    double w = (2.0 * asin((distance / 2.0) / R)) / t;
    double vt = w * R;
-   rightSpeed = (2 * vt) / ((R + radius) / (R - radius) + 1);
-   leftSpeed = (2 * vt) - rightSpeed;
+   double vd = (2 * vt) / ((R + radius) / (R - radius) + 1);
+   double vg = (2 * vt) - vd;
 
    {//Limit wheel speed and recalculate time
-      limitWheelConstraint(leftSpeed, rightSpeed);
-      w = (leftSpeed - rightSpeed) / (2 * radius);
-      t = w == 0 ? distance / leftSpeed : (2.0 * asin((distance / 2.0) / R)) / w;
+      limitWheelConstraint(vg, vd);
+      w = (vg - vd) / (2 * radius);
+      t = w == 0 ? distance / vg : (2.0 * asin((distance / 2.0) / R)) / w;
    }
    speedLog();
 
@@ -253,7 +256,7 @@ double Robot::goToPositionDuration(double t, Position destination) {
    std::cout << "Robot go to " << destination.x << ":" << destination.y
              << ", arriving in " << t << " s with an angle of " << newAngle << "deg"
              << std::endl;
-   return t;
+   return std::make_tuple(vg, vd, t);
 }
 
 void Robot::rotate(double time, double newOrientation) {

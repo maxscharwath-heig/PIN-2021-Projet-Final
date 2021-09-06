@@ -1,10 +1,10 @@
 #include <iostream>
+#include <tuple>
 #include "Coordinator.h"
 
-Coordinator::Coordinator(World* world) : world(world) { }
+Coordinator::Coordinator(World* world) : world(world) {}
 
-Coordinator::~Coordinator()
-{
+Coordinator::~Coordinator() {
    world = nullptr;
 }
 
@@ -25,17 +25,25 @@ void Coordinator::update() {
       switch (robot->getEvent().event) {
          case RobotEventState::PARTICULE_CONTACT: {
             Particule* contact = (Particule*) robot->getEvent().data;
-            if (robot->getTarget() == contact) {
+            if (contact && robot->getTarget() == contact) {
                std::cout << "Contact with target" << std::endl;
+               robot->resetEvent();
             } else {
                robot->resetEvent();
             }
          }
             break;
-         case RobotEventState::NO_PARTICULE:
-            robot->setTarget(closestParticle(robot));
-            robot->goToPositionDuration(10, robot->getTarget()->getPosition());
+         case RobotEventState::NO_PARTICULE: {
+            auto target = closestParticle(robot);
+            robot->setTarget(target);
+
+            auto tuple = robot->goToPositionDuration(20, target->getPosition());//0gauche 1droite 2temps pour y arriver
+
+            robot->addAction(world->simulationTime, std::get<0>(tuple),
+                             std::get<1>(tuple));
+
             robot->resetEvent();
+         }
             break;
          case RobotEventState::COLLISION_WARNING:
             //rotate or change direction

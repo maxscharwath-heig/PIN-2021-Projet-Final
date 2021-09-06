@@ -58,9 +58,9 @@ public:
 
    bool addAction(double t, double vg, double vd);
 
-   double goToPosition(int speed, Position destination);
+   std::tuple<double,double,double> goToPosition(int speed, Position destination);
 
-   double goToPositionDuration(double t, Position destination);
+   std::tuple<double,double,double> goToPositionDuration(double t, Position destination);
 
    void rotate(double time, double orientation);
 
