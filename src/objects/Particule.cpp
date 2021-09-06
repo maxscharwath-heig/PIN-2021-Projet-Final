@@ -7,7 +7,6 @@
 #include "../utils/Logger.h"
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
-#include "./Robot.h"
 
 Particule::Particule(
       Position position,

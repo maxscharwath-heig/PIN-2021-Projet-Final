@@ -3,7 +3,6 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <FL/fl_ask.H>
 #include <tuple>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
