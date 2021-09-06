@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Object.h"
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"

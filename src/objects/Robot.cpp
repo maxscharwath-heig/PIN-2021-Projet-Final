@@ -310,12 +310,17 @@ int Robot::getRadius() const noexcept {
    return radius;
 }
 
-bool operator<(const Robot& a, const Robot& b)
-{
+bool operator<(const Robot& a, const Robot& b) {
    return a.getRadius() < b.getRadius();
 }
 
 void Robot::setTarget(Particule* target) {
+   if (target == this->target)return;
+   if (this->target != nullptr)this->target->removeTargeter(this);
+   if (target != nullptr) {
+      target->addTargeter(this);
+      std::cout << "Target " << target->getId() << std::endl;
+   }
    this->target = target;
 }
 
@@ -324,7 +329,7 @@ Particule* Robot::getTarget() const noexcept {
 }
 
 bool Robot::hasTarget() const noexcept {
-   return target;
+   return target != nullptr;
 }
 
 

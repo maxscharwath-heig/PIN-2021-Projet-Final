@@ -6,6 +6,8 @@
 #include "../core/Canvas.h"
 #include "Object.h"
 
+class Robot;
+
 class Particule : public Object {
 private:
    const int radius;
@@ -19,6 +21,7 @@ private:
    double parentTime;
    double timeScale;
    int energy;
+   std::vector<Robot*> targeter;
 
    unsigned getLifetimeUntilDeath(unsigned tn1, unsigned index) const;
 
@@ -35,6 +38,8 @@ public:
          double parentTime = 0,
          unsigned decomposeLevel = 1
    );
+
+   ~Particule();
 
    unsigned getDecomposeLevel() const noexcept;
 
@@ -57,6 +62,10 @@ public:
    int getRadius() const noexcept override;
 
    int getEnergy() const noexcept;
+
+   void addTargeter(Robot* robot);
+
+   void removeTargeter(Robot* robot);
 };
 
 

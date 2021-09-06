@@ -75,7 +75,7 @@ public:
 
    bool hasTarget() const noexcept;
 
-   friend bool operator <(const Robot& a, const Robot& b);
+   friend bool operator<(const Robot& a, const Robot& b);
 };
 
 struct RobotData {
