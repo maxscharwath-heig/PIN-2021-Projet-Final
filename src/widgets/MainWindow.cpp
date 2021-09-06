@@ -92,6 +92,7 @@ void MainWindow::erase_dp(Fl_Widget* widget, void* data) {
    window->scrollbars->hide();
    window->loadedFilename.clear();
    window->fileLoadGroup->activate();
+   window->playPauseButton->label("go");
    window->inputFile->value("");
    window->label(DEFAULT_LABEL);
    window->resize(window->x(), window->y(), MIN_WIDTH, MIN_HEIGHT);
