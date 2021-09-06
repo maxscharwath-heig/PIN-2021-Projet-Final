@@ -89,6 +89,8 @@ public:
    std::string infos() const;
 
    void speedLog() const;
+
+   void clearAction();
 };
 
 struct RobotData {

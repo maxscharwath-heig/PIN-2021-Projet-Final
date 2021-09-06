@@ -142,7 +142,7 @@ void Robot::emergencyStop() {
    isEmergencyStopped = true;
    leftSpeed = rightSpeed = 0;
    speedLog();
-   std::queue<RobotAction>().swap(actions); // clear actions;
+   this->clearAction(); // clear actions;
 }
 
 bool Robot::addAction(double t, double vg, double vd) {
@@ -370,5 +370,9 @@ void Robot::speedLog() const {
    std::stringstream ss;
    ss << world->simulationTime << infos();
    Logger::Log(LoggerType::R_VELOCITY, ss.str());
+}
+
+void Robot::clearAction() {
+   std::queue<RobotAction>().swap(actions);
 }
 
