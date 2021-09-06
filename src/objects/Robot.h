@@ -94,6 +94,10 @@ public:
 
    Particule* target;
    double orientation;
+
+   bool isRotating() const;
+
+   void rotate(double speed);
 };
 
 struct RobotData {

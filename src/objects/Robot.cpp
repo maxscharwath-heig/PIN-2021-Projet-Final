@@ -237,6 +237,18 @@ Robot::goToPositionDuration(double t, Position destination) {
    return std::make_tuple(vg, vd, t);
 }
 
+bool Robot::isRotating() const {
+   return leftSpeed == -rightSpeed && leftSpeed != 0;
+}
+
+void Robot::rotate(double speed) {
+   double now = world ? world->simulationTime : 0;
+   double vg = speed;
+   double vd = -vg;
+   limitWheelConstraint(vg, vd);
+   addAction(now, vg, vd);
+}
+
 void Robot::rotate(double time, double newOrientation) {
    if (newOrientation == orientation) return;
 
@@ -356,8 +368,7 @@ void Robot::clearAction() {
    std::queue<RobotAction>().swap(actions);
 }
 
-double Robot::getOrientation() const noexcept
-{
+double Robot::getOrientation() const noexcept {
    return orientation;
 }
 

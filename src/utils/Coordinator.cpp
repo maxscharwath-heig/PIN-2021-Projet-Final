@@ -37,27 +37,29 @@ void Coordinator::update() {
          case RobotEventState::NO_PARTICULE: {
             auto target = closestParticle(robot);
             robot->setTarget(target);
-
-            auto tuple = robot->goToPositionDuration(1, target->getPosition());
-
-            robot->goToPosition(std::get<1>(tuple), target->getPosition());
-
-            //a //0gauche 1droite 2temps pour y arriver
-
-            //robot->goToPosition(std::get<1>(tuple), target->getPosition());
-
-            robot->addAction(world->simulationTime, std::get<0>(tuple), std::get<1>(tuple));
             robot->resetEvent();
             break;
          }
 
          case RobotEventState::COLLISION_WARNING:
             // rotate or change direction
-            robot->rotate(1, robot->getOrientation() + 90);
+            robot->rotate(30);
             robot->resetEvent();
             break;
          default:
          case RobotEventState::UNKNOWN:
+            if (robot->hasTarget()) {
+               auto target = robot->getTarget();
+               double angle = robot->getAlignementWithParticle(target);
+               if (std::abs(angle) > 90) {
+                  if (!robot->isRotating())
+                     robot->rotate(angle > 0 ? 30 : -30);
+               } else {
+                  auto tuple = robot->goToPositionDuration(1, target->getPosition());
+                  robot->addAction(world->simulationTime, std::get<0>(tuple),
+                                   std::get<1>(tuple));
+               }
+            }
             break;
       }
    }
