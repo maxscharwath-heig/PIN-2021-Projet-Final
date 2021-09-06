@@ -30,8 +30,6 @@ private:
    RobotEvent event;
    Particule* target;
 
-   double getAlignementWithParticle(Particule* particule) const;
-
    bool canAspirateParticle(Particule* particule) const;
 
    bool isInContactWithParticle(Particule* particule) const;
@@ -43,6 +41,8 @@ private:
 public:
    Robot(Position position, int radius, int orientation, int leftSpeed,
          int rightSpeed);
+
+   double getAlignementWithParticle(Particule* particule) const;
 
    void draw(WorldWidget* widget) const override;
 
