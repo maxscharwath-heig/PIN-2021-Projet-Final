@@ -1,7 +1,3 @@
-//
-// Created by Maxime on 31.08.2021.
-//
-
 #ifndef PIN_2021_SERIE_1_FL_CENTER_SCROLL_H
 #define PIN_2021_SERIE_1_FL_CENTER_SCROLL_H
 
@@ -23,11 +19,9 @@ private:
 
 public:
    Fl_Center_Scroll(int X, int Y, int W, int H, const char* L = nullptr) : Fl_Scroll(
-         X, Y, W, H, L
-   ) {
-   }
+         X, Y, W, H, L) { }
 
-   void draw() {
+   void draw() override {
       if (children() > 0) {
          Fl_Widget* cw = child(0);
          if (prevH != cw->h() || prevW != cw->w()) {
