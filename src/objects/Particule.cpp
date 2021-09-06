@@ -2,8 +2,10 @@
 #include <FL/FL_Draw.H>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 #include "../core/World.h"
 #include "../widgets/WorldWidget.h"
+#include "./Robot.h"
 
 Particule::Particule(
       Position position,
@@ -134,4 +136,23 @@ int Particule::getEnergy() const {
 
 int Particule::getRadius() const {
    return radius;
+}
+
+Particule::~Particule() {
+   for (const auto& item: targeter) {
+      if (item) {
+         item->setTarget(nullptr);
+      }
+   }
+   targeter.clear();
+}
+
+void Particule::addTargeter(Robot* robot) {
+   targeter.push_back(robot);
+}
+
+void Particule::removeTargeter(Robot* robot) {
+   auto el = std::find(targeter.begin(), targeter.end(), robot);
+   if (el == targeter.end()) return;
+   targeter.erase(el);
 }

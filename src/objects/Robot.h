@@ -23,7 +23,7 @@ private:
    double leftSpeed, rightSpeed;
    std::queue<RobotAction> actions;
    RobotEvent event = RobotEvent::UNKNOWN;
-   Particule* target;
+   Particule* target = nullptr;
 
    double getAlignementWithParticle(Particule* particule);
 
@@ -70,10 +70,12 @@ public:
    void aspirate(Particule* particule);
 
    void setTarget(Particule* target);
+
    Particule* getTarget();
+
    bool hasTarget();
 
-   friend bool operator <(const Robot& a, const Robot& b);
+   friend bool operator<(const Robot& a, const Robot& b);
 };
 
 struct RobotData {
